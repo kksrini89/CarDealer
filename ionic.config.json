@@ -1,6 +1,8 @@
 {
   "name": "cardealer",
-  "app_id": "",
+  "app_id": "bb85fbea",
   "type": "ionic-angular",
-  "integrations": {}
+  "integrations": {
+    "cordova": {}
+  }
 }

@@ -3,9 +3,9 @@ import { IonicPage, NavController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-contact',
-  templateUrl: 'contact.html'
+  selector: 'page-upload',
+  templateUrl: 'upload.html'
 })
-export class ContactPage {
+export class UploadPage {
   constructor(public navCtrl: NavController) {}
 }
