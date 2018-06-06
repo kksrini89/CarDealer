@@ -10,7 +10,7 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { MyApp } from './app.component';
 
 import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
+// import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,17 +26,17 @@ const firebaseConfig = {
   messagingSenderId: '30802465799'
 };
 
-const prodFirebaseConfig = {
-  apiKey: 'AIzaSyAo4OBVMuJuYXGOvGWSdNS2NZGgPvtKfLk',
-  authDomain: 'own-carseller-prod.firebaseapp.com',
-  databaseURL: 'https://own-carseller-prod.firebaseio.com',
-  projectId: 'own-carseller-prod',
-  storageBucket: 'own-carseller-prod.appspot.com',
-  messagingSenderId: '728792676162'
-};
+// const prodFirebaseConfig = {
+//   apiKey: 'AIzaSyAo4OBVMuJuYXGOvGWSdNS2NZGgPvtKfLk',
+//   authDomain: 'own-carseller-prod.firebaseapp.com',
+//   databaseURL: 'https://own-carseller-prod.firebaseio.com',
+//   projectId: 'own-carseller-prod',
+//   storageBucket: 'own-carseller-prod.appspot.com',
+//   messagingSenderId: '728792676162'
+// };
 
 @NgModule({
-  declarations: [MyApp, HomePage, TabsPage],
+  declarations: [MyApp, HomePage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
@@ -47,7 +47,7 @@ const prodFirebaseConfig = {
     ComponentsModule
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp, HomePage, TabsPage],
+  entryComponents: [MyApp, HomePage],
   providers: [
     StatusBar,
     SplashScreen,

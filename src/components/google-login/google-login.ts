@@ -5,7 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { GooglePlus } from '@ionic-native/google-plus';
 
 import { Observable } from 'rxjs/Observable';
-import { Platform } from 'ionic-angular';
+import { Platform, NavController } from 'ionic-angular';
 
 @Component({
   selector: 'google-login',
@@ -17,13 +17,22 @@ export class GoogleLoginComponent {
   constructor(
     private afAuth: AngularFireAuth,
     private gplus: GooglePlus,
-    private platform: Platform
+    private platform: Platform,
+    private navCtrl: NavController
   ) {
     this.user = this.afAuth.authState;
-    if (this.platform.is('cordova')) {
-      this.nativeGoogleLogin();
-    } else {
-      this.webGoogleLogin();
+  }
+
+  googleLogin() {
+    try {
+      if (this.platform.is('cordova')) {
+        this.nativeGoogleLogin();
+      } else {
+        this.webGoogleLogin();
+      }
+      this.navCtrl.setRoot('TabsPage');
+    } catch (error) {
+      this.navCtrl.setRoot('LoginPage');
     }
   }
 
@@ -45,7 +54,8 @@ export class GoogleLoginComponent {
   async webGoogleLogin() {
     try {
       const provider = new firebase.auth.GithubAuthProvider();
-      const credential = await this.afAuth.auth.signInWithPopup(provider);
+      // const credential =
+      await this.afAuth.auth.signInWithPopup(provider);
     } catch (error) {
       console.log(error);
     }
