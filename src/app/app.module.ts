@@ -9,13 +9,14 @@ import { Firebase } from '@ionic-native/firebase';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { MyApp } from './app.component';
 
-import { HomePage } from '../pages/home/home';
+// import { HomePage } from '../pages/home/home';
 // import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { CarAdminProvider } from '../providers/car-admin.service';
 import { ComponentsModule } from '../components/components.module';
+// import { AuthProvider } from '../providers/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAH05o6tEQJBUyuh9zV8dSRGBG5e7cIcMc',
@@ -36,7 +37,7 @@ const firebaseConfig = {
 // };
 
 @NgModule({
-  declarations: [MyApp, HomePage],
+  declarations: [MyApp],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
@@ -47,11 +48,12 @@ const firebaseConfig = {
     ComponentsModule
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp, HomePage],
+  entryComponents: [MyApp],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
+    // AuthProvider,
     Firebase,
     GooglePlus,
     CarAdminProvider
