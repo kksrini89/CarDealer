@@ -9,9 +9,9 @@ import { AuthProvider } from '../../providers/auth';
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
-  tab1Root = 'HomePage';
+  // tab1Root = 'HomePage';
   tab2Root = 'UploadPage';
-  tab3Root = 'ContactPage';
+  tab3Root = 'ProfilePage';
   tab4Root = 'DisplayPage';
 
   constructor(private auth: AuthProvider) {}

@@ -4,9 +4,6 @@ import { Platform } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
-// import { Observable } from 'rxjs/Observable';
-// import 'rxjs/add/observable/of';
-// import { Observable, of } from 'rxjs';
 import { switchMap, first } from 'rxjs/operators';
 import { GooglePlus } from '@ionic-native/google-plus';
 
@@ -36,13 +33,9 @@ export class AuthProvider {
   async googleLogin() {
     try {
       if (this.platform.is('cordova')) {
-        this.nativeGoogleLogin().then(async res => {
-          return await this.updateUserData(res.user);
-        });
+        return await this.nativeGoogleLogin();
       } else {
-        this.webGoogleLogin().then(async res => {
-          return await this.updateUserData(res.user);
-        });
+        return await this.webGoogleLogin();
       }
     } catch (error) {
       console.log(error);
@@ -51,14 +44,19 @@ export class AuthProvider {
 
   private async nativeGoogleLogin(): Promise<any> {
     try {
-      const gplusUser = await this.gplus.login({
-        webClientId: '30802465799-hgtp7kinapiocrg12cbti9lgk50rsd5o.apps.googleusercontent.com',
-        offline: true,
-        scopes: 'profile email'
-      });
-      return await this.afAuth.auth.signInWithCredential(
-        firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
-      );
+      const gplusUser = await this.gplus
+        .login({
+          // webClientId: '30802465799-hgtp7kinapiocrg12cbti9lgk50rsd5o.apps.googleusercontent.com',
+          offline: true,
+          scopes: 'profile email'
+        })
+        .then(res => {
+          return this.afAuth.auth.signInWithCredential(
+            firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
+          );
+        })
+        .then(user => this.updateUserData(user));
+      //      return await this.updateUserData(user);
     } catch (error) {
       console.log(error);
     }
@@ -67,7 +65,8 @@ export class AuthProvider {
   private async webGoogleLogin(): Promise<any> {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();
-      return await this.afAuth.auth.signInWithPopup(provider);
+      this.afAuth.auth.signInWithPopup(provider).then(res => this.updateUserData(res.user));
+      // return await this.updateUserData(credential.user);
     } catch (error) {
       console.log(error);
     }

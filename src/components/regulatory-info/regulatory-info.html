@@ -1,0 +1,20 @@
+<div *ngIf="regInfoForm">
+  <form [formGroup]="regInfoForm">
+
+    <ion-item>
+      <ion-label floating>Registration Place</ion-label>
+      <ion-input formControlName="registrationPlace" type="text" [class.invalid]="!regInfoForm.controls.registrationPlace.valid && (regInfoForm.controls.registrationPlace.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Insurance Type</ion-label>
+      <ion-input formControlName="insurance_type" type="text" [class.invalid]="!regInfoForm.controls.insurance_type.valid && (regInfoForm.controls.insurance_type.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Insurance Year</ion-label>
+      <ion-datetime formControlName="insurance_year" displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY"></ion-datetime>
+    </ion-item>
+
+  </form>
+</div>

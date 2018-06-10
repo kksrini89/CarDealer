@@ -1,5 +1,90 @@
-<form [formGroup]="stockerForm">
-  <ion-input formControlName="firstName" type="text"></ion-input>
-  <ion-input formControlName="lastName" type="text"></ion-input>
-  <ion-input formControlName="age" type="number"></ion-input>
-</form>
+<div *ngIf="stockerForm">
+
+  <form [formGroup]="stockerForm">
+    <ion-item>
+      <ion-label floating>Car Make</ion-label>
+      <ion-input formControlName="cMake" type="text" [class.invalid]="!stockerForm.controls.cMake.valid && (stockerForm.controls.cMake.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!stockerForm.controls.cMake.valid  && (stockerForm.controls.cMake.dirty || submitAttempt)">
+      <p>Please enter a valid name.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Car Model</ion-label>
+      <ion-input formControlName="cModel" type="text" [class.invalid]="!stockerForm.controls.cModel.valid && (stockerForm.controls.cModel.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <!-- <ion-item *ngIf="!stockerForm.controls.cModel.valid  && (stockerForm.controls.cModel.dirty || submitAttempt)">
+          <p>Please enter a valid name.</p>
+        </ion-item> -->
+
+    <ion-item>
+      <ion-label floating>Car Varriant</ion-label>
+      <ion-input formControlName="cVarriant" type="text" [class.invalid]="!stockerForm.controls.cVarriant.valid && (stockerForm.controls.cVarriant.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <!-- <ion-item *ngIf="!stockerForm.controls.age.valid  && (stockerForm.controls.age.dirty || submitAttempt)">
+            <p>Please enter a valid age.</p>
+          </ion-item> -->
+
+    <ion-item>
+      <ion-label>Make Year and Month</ion-label>
+      <ion-datetime formControlName="cMake_year" displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY"></ion-datetime>
+    </ion-item>
+
+    <!-- <ion-item *ngIf="!stockerForm.controls.age.valid  && (stockerForm.controls.age.dirty || submitAttempt)">
+            <p>Please enter a valid age.</p>
+          </ion-item> -->
+
+    <ion-item>
+      <ion-label floating>No.Of Owners</ion-label>
+      <ion-input formControlName="cNumber_of_owners" type="number" [class.invalid]="!stockerForm.controls.cNumber_of_owners.valid && (stockerForm.controls.cNumber_of_owners.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!stockerForm.controls.cNumber_of_owners.valid  && (stockerForm.controls.cNumber_of_owners.dirty || submitAttempt)">
+      <p>Please enter a valid age.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Kms Driven</ion-label>
+      <ion-input formControlName="cKms_driven" type="number" [class.invalid]="!stockerForm.controls.cKms_driven.valid && (stockerForm.controls.cKms_driven.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Transmission Type</ion-label>
+      <ion-input formControlName="cTransmission_type" type="text" [class.invalid]="!stockerForm.controls.cTransmission_type.valid && (stockerForm.controls.cTransmission_type.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Fuel Type</ion-label>
+      <ion-input formControlName="cFuel_type" type="text" [class.invalid]="!stockerForm.controls.cFuel_type.valid && (stockerForm.controls.cFuel_type.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Condition</ion-label>
+      <ion-input formControlName="cCondition" type="text" [class.invalid]="!stockerForm.controls.cCondition.valid && (stockerForm.controls.cCondition.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label floating>Color</ion-label>
+      <ion-input formControlName="cColor" type="text" [class.invalid]="!stockerForm.controls.cColor.valid && (stockerForm.controls.cColor.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label floating>Vehicle Type</ion-label>
+      <ion-input formControlName="cVehicle_type" type="text" [class.invalid]="!stockerForm.controls.cVehicle_type.valid && (stockerForm.controls.cVehicle_type.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label floating>Inspection Valid Until</ion-label>
+      <ion-datetime formControlName="cInspection_valid_until" displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" [class.invalid]="!stockerForm.controls.cInspection_valid_until.valid && (stockerForm.controls.cInspection_valid_until.dirty || submitAttempt)"></ion-datetime>
+    </ion-item>
+
+
+    <!-- <button ion-button full color="primary" (click)="save()">Upload</button> -->
+  </form>
+</div>

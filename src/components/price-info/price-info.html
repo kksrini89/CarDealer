@@ -1,0 +1,18 @@
+<div *ngIf="priceInfoForm">
+  <form [formGroup]="priceInfoForm">
+
+    <ion-item>
+      <ion-label>Is Fixed</ion-label>
+      <ion-checkbox formControlName="isFixed"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-label>Is Exchange Accepted</ion-label>
+      <ion-checkbox formControlName="isExchangeAccepted"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-label>Warranty</ion-label>
+      <ion-input formControlName="warranty" type="text" [class.invalid]="!priceInfoForm.controls.warranty.valid && (priceInfoForm.controls.warranty.dirty || submitAttempt)"></ion-input>
+    </ion-item>
+
+  </form>
+</div>

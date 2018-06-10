@@ -7,5 +7,83 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-slides #carSlider pager>
 
+    <ion-slide>
+
+      <p *ngIf="submitAttempt" style="color: #ea6153;">Please fill out all details accurately.</p>
+
+      <ion-list no-lines>
+        <stocker-form [stockerForm]="stockerForm" [submitAttempt]="submitAttempt"></stocker-form>
+      </ion-list>
+
+    </ion-slide>
+
+    <ion-slide>
+      <ion-list no-lines>
+        <regulatory-info [regInfoForm]="regInfoForm" [submitAttempt]="submitAttempt"></regulatory-info>
+      </ion-list>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-list no-lines>
+        <price-info [priceInfoForm]="priceForm" [submitAttempt]="submitAttempt"></price-info>
+      </ion-list>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-list no-lines>
+        <div *ngIf="carDetailForm">
+          <form [formGroup]="carDetailForm">
+            <ion-item>
+              <ion-label floating>Photo</ion-label>
+              <ion-input formControlName="photo" type="text" [class.invalid]="!carDetailForm.controls.photo.valid && (carDetailForm.controls.photo.dirty || submitAttempt)"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>Duration</ion-label>
+              <ion-input formControlName="duration" type="number"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>Mileage</ion-label>
+              <ion-input formControlName="mileage" type="number"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>Description</ion-label>
+              <ion-textarea formControlName="description"></ion-textarea>
+            </ion-item>
+            <ion-item>
+              <ion-label>Is Car Accidental</ion-label>
+              <ion-checkbox formControlName="isCarAccidental"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Is Car Certified</ion-label>
+              <ion-checkbox formControlName="isCarCertified"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Is Car Flood Affected</ion-label>
+              <ion-checkbox formControlName="isCarFloodAffected"></ion-checkbox>
+            </ion-item>
+            <!-- <ion-item>
+              <ion-label floating>Is Car Accidental</ion-label>
+              <ion-input formControlName="isCarAccidental" type="checkbox"></ion-input>
+            </ion-item> -->
+            <!-- <ion-item>
+              <ion-label floating>Is Car Certified</ion-label>
+              <ion-input formControlName="isCarCertified" type="checkbox"></ion-input>
+            </ion-item> -->
+            <!-- <ion-item>
+              <ion-label floating>Is Car Flood Affected</ion-label>
+              <ion-input formControlName="isCarFloodAffected" type="checkbox"></ion-input>
+            </ion-item> -->
+            <ion-item>
+              <ion-label>Stock Entry Date</ion-label>
+              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate"></ion-datetime>
+            </ion-item>
+          </form>
+        </div>
+      </ion-list>
+      <button ion-button color="primary" (click)="save()">Upload</button>
+    </ion-slide>
+
+  </ion-slides>
 </ion-content>

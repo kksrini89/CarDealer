@@ -10,7 +10,6 @@ export class GoogleLoginComponent {
   constructor(private navCtrl: NavController, public auth: AuthProvider) {}
 
   async googleLogin() {
-    await this.auth.googleLogin();
-    await this.navCtrl.setRoot('TabsPage');
+    this.auth.googleLogin().then(() => this.navCtrl.setRoot('TabsPage'));
   }
 }
