@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 // import { HomePage } from '../home/home';
 import { IonicPage } from 'ionic-angular';
-import { AuthProvider } from '../../providers/auth';
+// import { AuthProvider } from '../../providers/auth.service';
 
 @IonicPage()
 @Component({
@@ -14,9 +14,10 @@ export class TabsPage {
   tab3Root = 'ProfilePage';
   tab4Root = 'DisplayPage';
 
-  constructor(private auth: AuthProvider) {}
+  constructor() {}
 
   ionViewCanEnter() {
-    return this.auth.isLoggedIn();
+    // return this.auth.isLoggedIn();
+    return true;
   }
 }

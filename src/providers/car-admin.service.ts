@@ -1,23 +1,39 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-// import {
-//   AngularFirestore,
-//   AngularFirestoreCollection,
-//   AngularFirestoreDocument
-// } from 'angularfire2/firestore';
+import { Injectable, OnInit } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 
-// import { Car } from '../models/car.model';
+import { Car } from '../models/car.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class CarAdminProvider {
-  // private afDocument: AngularFirestoreDocument<Car>;
-  // private afCollection: AngularFirestoreCollection<Car>;
+export class CarAdminProvider implements OnInit {
+  carCollection: AngularFirestoreCollection<Car>;
+  car$: Observable<Car[]>;
 
-  constructor(public http: HttpClient) {
-    console.log('Hello CarAdminProvider Provider');
+  constructor(public afStore: AngularFirestore) {
+    this.carCollection = this.afStore.collection('cars');
+    // this.car$ = this.carCollection.valueChanges();
+    this.carCollection.snapshotChanges().map(item => {
+      return item.map(snap => {
+        const data = snap.payload.doc.data();
+        const id = snap.payload.doc.id;
+        return { id, ...data };
+      });
+    });
   }
 
-  // addCar(car: Car) {
+  ngOnInit() {}
 
-  // }
+  async addCar(car: Car) {
+    await this.afStore.collection('cars').add(car);
+  }
+
+  getCars() {
+    return this.carCollection.snapshotChanges().map(item => {
+      return item.map(snap => {
+        const data = snap.payload.doc.data();
+        const id = snap.payload.doc.id;
+        return { id, ...data };
+      });
+    });
+  }
 }

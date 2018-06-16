@@ -16,6 +16,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { CarAdminProvider } from '../providers/car-admin.service';
 import { ComponentsModule } from '../components/components.module';
+import { CommonProvider } from '../providers/common.service';
 // import { AuthProvider } from '../providers/auth';
 
 const firebaseConfig = {
@@ -56,7 +57,8 @@ const firebaseConfig = {
     // AuthProvider,
     Firebase,
     GooglePlus,
-    CarAdminProvider
+    CarAdminProvider,
+    CommonProvider
   ]
 })
 export class AppModule {}

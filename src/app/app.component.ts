@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { AuthProvider } from '../providers/auth';
+import { AuthProvider } from '../providers/auth.service';
 
 // import { TabsPage } from '../pages/tabs/tabs';
 // import { LoginPage } from '../pages/login/login';
@@ -21,8 +21,8 @@ export class MyApp {
     authService: AuthProvider
   ) {
     platform.ready().then(() => {
-      authService.getCurrentUser().then(user => {
-        if (user) {
+      authService.isLoggedIn().then(res => {
+        if (res) {
           this.rootPage = 'TabsPage';
         } else {
           this.rootPage = 'LoginPage';
@@ -31,7 +31,7 @@ export class MyApp {
         // Here you can do any higher level native things you might need.
         statusBar.styleDefault();
         splashScreen.hide();
-        timer(3000).subscribe(() => this.showSplash = false);
+        timer(3000).subscribe(() => (this.showSplash = false));
       });
     });
   }

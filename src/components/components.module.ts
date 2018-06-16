@@ -7,7 +7,7 @@ import { GoogleLoginComponent } from './google-login/google-login';
 import { StockerFormComponent } from './stocker-form/stocker-form';
 import { RegulatoryInfoComponent } from './regulatory-info/regulatory-info';
 import { PriceInfoComponent } from './price-info/price-info';
-import { AuthProvider } from '../providers/auth';
+import { AuthProvider } from '../providers/auth.service';
 import { CarAdminProvider } from '../providers/car-admin.service';
 import { HttpClientModule } from '@angular/common/http';
 

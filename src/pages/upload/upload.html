@@ -13,9 +13,11 @@
 
       <p *ngIf="submitAttempt" style="color: #ea6153;">Please fill out all details accurately.</p>
 
-      <ion-list no-lines>
+      <!-- <ion-list no-lines> -->
+      <div>
         <stocker-form [stockerForm]="stockerForm" [submitAttempt]="submitAttempt"></stocker-form>
-      </ion-list>
+      </div>
+      <!-- </ion-list> -->
 
     </ion-slide>
 
