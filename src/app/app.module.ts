@@ -7,6 +7,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { Firebase } from '@ionic-native/firebase';
 import { GooglePlus } from '@ionic-native/google-plus';
+import { Camera } from '@ionic-native/camera';
 import { MyApp } from './app.component';
 
 // import { HomePage } from '../pages/home/home';
@@ -54,7 +55,7 @@ const firebaseConfig = {
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    // AuthProvider,
+    Camera,
     Firebase,
     GooglePlus,
     CarAdminProvider,

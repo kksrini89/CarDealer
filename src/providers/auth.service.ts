@@ -72,7 +72,9 @@ export class AuthProvider {
     // try {
     this.gplus
       .login({
-        'webClientId': '30802465799-jpvhojb4l9ov1toj7hp9fdkso73gnbbg.apps.googleusercontent.com',
+        'webClientId': '30802465799-hgtp7kinapiocrg12cbti9lgk50rsd5o.apps.googleusercontent.com',
+        // 'webClientId':'30802465799-0boam07u5to1i1fv4rehdrchqbruj025.apps.googleusercontent.com',
+        // 'webClientId': '30802465799-jpvhojb4l9ov1toj7hp9fdkso73gnbbg.apps.googleusercontent.com',
         'offline': true,
         'scopes': 'profile email'
       })

@@ -2,15 +2,22 @@ import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {
   IonicPage,
+  Tabs,
   NavController,
   LoadingController,
   AlertController,
-  Loading
+  Loading,
+  Tab
 } from 'ionic-angular';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import { AuthProvider } from '../../providers/auth.service';
 import { CommonProvider } from '../../providers/common.service';
 import { CarAdminProvider } from '../../providers/car-admin.service';
+import { DisplayPage } from '../display/display';
+import { AngularFireUploadTask, AngularFireStorage } from 'angularfire2/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @IonicPage()
 @Component({
@@ -18,7 +25,12 @@ import { CarAdminProvider } from '../../providers/car-admin.service';
   templateUrl: 'upload.html'
 })
 export class UploadPage {
+  tabsCtrl: Tabs;
   @ViewChild('carSlider') carSlider: any;
+
+  task: AngularFireUploadTask;
+  percentageChanges: Observable<Number>;
+  downloadURL: String;
 
   public carDetailForm: FormGroup;
   public stockerForm: FormGroup;
@@ -32,6 +44,8 @@ export class UploadPage {
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
+    public camera: Camera,
+    public afStorage: AngularFireStorage,
     public auth: AuthProvider,
     private carService: CarAdminProvider,
     private commonService: CommonProvider
@@ -72,12 +86,13 @@ export class UploadPage {
   }
 
   ionViewWillEnter() {
+    this.tabsCtrl = this.navCtrl.parent;
     this.loadForm();
   }
 
   loadForm(): void {
     this.carDetailForm = this.formBuilder.group({
-      photo: ['www.google.com'],
+      photo: [''],
       mileage: [20],
       duration: ['1 year'],
       description: [''],
@@ -126,11 +141,8 @@ export class UploadPage {
   async save() {
     this.submitAttempt = true;
     this.loading = this.loadingCtrl.create({
-      spinner: 'hide',
-      content: `
-        <div class="custom-spinner-container">
-          <div class="custom-spinner-box"></div>
-        </div>`,
+      // spinner: 'hide',
+      content: `Saving`,
       dismissOnPageChange: true
     });
     try {
@@ -182,10 +194,62 @@ export class UploadPage {
         await this.carService.addCar(newCar);
       }
       this.loading.dismiss();
-      this.navCtrl.push('DisplayPage');
+      // this.navCtrl.push('DisplayPage');
+      this.tabsCtrl.select(2);
     } catch (error) {
       this.loading.dismiss();
       this.commonService.errorAlert('Error', 'Something fishy happened!');
     }
+  }
+
+  /**
+   * To pick car image from gallery
+   *  sourceType = 0 // Photo Library
+   *  sourceType = 1 // Camera
+   */
+  addFromGallery() {
+    const options: CameraOptions = {
+      quality: 33,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      sourceType: 0
+    };
+
+    this.camera.getPicture(options).then(
+      imageData => {
+        let loadingCtrl = this.loadingCtrl.create({
+          // spinner: 'hide',
+          content: `Saving`,
+          dismissOnPageChange: true
+        });
+        loadingCtrl.present();
+        let base64Image = 'data:image/jpeg;base64,' + imageData;
+        this.uploadImage(base64Image);
+        loadingCtrl.dismiss();
+      },
+      err => {
+        this.commonService.errorAlert('Error in Gallery', 'Please try one more time!');
+      }
+    );
+  }
+
+  uploadImage(base64Image) {
+    const filePath = `uploads/images/${new Date().getTime()}`;
+    const ref = this.afStorage.ref(filePath);
+    this.task = ref.putString(base64Image, 'data_url');
+    this.percentageChanges = this.task.percentageChanges();
+    this.task
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          ref.getDownloadURL().subscribe(url => {
+            this.downloadURL = url;
+            this.carDetailForm.get('photo').setValue(this.downloadURL);
+          });
+        })
+      )
+      .subscribe();
   }
 }

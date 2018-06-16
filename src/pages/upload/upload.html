@@ -1,6 +1,6 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
+  <ion-navbar color="primary">
+    <ion-title text-center>
       Upload
     </ion-title>
   </ion-navbar>
@@ -39,7 +39,11 @@
           <form [formGroup]="carDetailForm">
             <ion-item>
               <ion-label floating>Photo</ion-label>
-              <ion-input formControlName="photo" type="text" [class.invalid]="!carDetailForm.controls.photo.valid && (carDetailForm.controls.photo.dirty || submitAttempt)"></ion-input>
+              <ion-input formControlName="photo" type="text" [class.invalid]="!carDetailForm.controls.photo.valid
+                  && (carDetailForm.controls.photo.dirty || submitAttempt)"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="image" center (click)="addFromGallery()"></ion-icon>
             </ion-item>
             <ion-item>
               <ion-label floating>Duration</ion-label>

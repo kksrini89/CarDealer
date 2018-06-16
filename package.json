@@ -21,6 +21,7 @@
     "@angular/http": "5.2.10",
     "@angular/platform-browser": "5.2.10",
     "@angular/platform-browser-dynamic": "5.2.10",
+    "@ionic-native/camera": "^4.7.0",
     "@ionic-native/core": "4.7.0",
     "@ionic-native/firebase": "^4.7.0",
     "@ionic-native/google-plus": "^4.7.0",
@@ -30,6 +31,7 @@
     "angularfire2": "^5.0.0-rc.9",
     "cordova-android": "7.1.0",
     "cordova-ios": "4.5.4",
+    "cordova-plugin-camera": "^4.0.3",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-firebase": "^1.0.5",
     "cordova-plugin-googleplus": "^5.3.0",
@@ -62,6 +64,7 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-camera": {},
       "cordova-plugin-googleplus": {
         "REVERSED_CLIENT_ID": "com.googleusercontent.apps.30802465799-73m8galjm47gfp6bbbt8k1tcc6e96l93"
       }
