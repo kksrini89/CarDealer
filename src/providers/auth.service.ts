@@ -71,7 +71,7 @@ export class AuthProvider {
   async nativeGoogleLogin() {
 
     const gplusUser = await this.gplus.login({
-      'webClientId': '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
+      'webClientId': '', // Removed since security
       'offline': true,
       'scopes': 'profile email'
     })
@@ -80,7 +80,7 @@ export class AuthProvider {
     // try {
     // this.gplus
     //   .login({
-    //     'webClientId': '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
+    //     'webClientId': '',
     //     'offline': true,
     //     'scopes': 'profile email'
     //   })
