@@ -1,15 +1,28 @@
 <ion-header>
-  <ion-navbar  color="primary">
+  <ion-navbar color="danger">
     <ion-title text-center>
-      Profile
+      PROFILE
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen>
+  <div class="header-parent">
+    <div class="profile">
+      <img src="{{loggedInUser.photoURL}}">
+    </div>
+  </div>
+  <div text-center padding>
+    <div>{{loggedInUser.email}}</div>
+    <button ion-button (click)="logout()" icon-left>
+      <ion-icon name="log-out"></ion-icon>
+       Logout</button>
+  </div>
   <ion-list>
-    <button ion-button (click)="logout()">
-      <ion-icon name="log-out" item-start></ion-icon>
-      Logout</button>
+    <!-- <div>
+      <span>Display Name - {{loggedInUser.displayName}}</span>
+      <span>Image URL - {{loggedInUser.imageUrl}}</span>
+    </div> -->
+
   </ion-list>
 </ion-content>

@@ -1,7 +1,19 @@
-page-about {
-  .swiper-slide {
-    display: block;
+.ios,
+.md {
+  page-about {
+    .slide-item {
+      max-height: 100%;
+      overflow-y: scroll;
+    }
   }
+}
+
+.swiper-slide {
+  display: block;
+}
+
+.swiper-wrapper {
+  margin-bottom: 10vh !important;
 }
 ion-slides {
   height: auto !important;

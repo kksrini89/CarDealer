@@ -1,20 +1,30 @@
-<ion-header>
+<ion-header transparent>
   <ion-navbar color="primary">
     <ion-title text-center>
-      Upload
+      UPLOAD
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+  <!-- <div class="slides"> -->
   <ion-slides #carSlider pager>
 
     <ion-slide>
+      <div padding>
+        <p style="font-family:open-sans; font-size:14px; color: #d3c719fa">Please fill the
+          <b>Car</b> details.</p>
 
-      <p *ngIf="submitAttempt" style="color: #ea6153;">Please fill out all details accurately.</p>
+        <img style="height:auto;width:auto;" src="assets/imgs/car-image.png" alt="dealer-form">
+      </div>
+    </ion-slide>
 
-      <!-- <ion-list no-lines> -->
-      <div>
+    <ion-slide>
+
+      <div class="slide-item" padding>
+        <p *ngIf="submitAttempt" style="color: #ea6153;">Please fill out all details accurately.</p>
+
+        <!-- <ion-list no-lines> -->
         <stocker-form [stockerForm]="stockerForm" [submitAttempt]="submitAttempt"></stocker-form>
       </div>
       <!-- </ion-list> -->
@@ -22,20 +32,24 @@
     </ion-slide>
 
     <ion-slide>
-      <ion-list no-lines>
-        <regulatory-info [regInfoForm]="regInfoForm" [submitAttempt]="submitAttempt"></regulatory-info>
-      </ion-list>
+      <div class="slide2" padding>
+        <ion-list no-lines>
+          <regulatory-info [regInfoForm]="regInfoForm" [submitAttempt]="submitAttempt"></regulatory-info>
+        </ion-list>
+      </div>
     </ion-slide>
 
     <ion-slide>
-      <ion-list no-lines>
-        <price-info [priceInfoForm]="priceForm" [submitAttempt]="submitAttempt"></price-info>
-      </ion-list>
+      <div class="slide3" padding>
+        <ion-list no-lines>
+          <price-info [priceInfoForm]="priceForm" [submitAttempt]="submitAttempt"></price-info>
+        </ion-list>
+      </div>
     </ion-slide>
 
     <ion-slide>
-      <ion-list no-lines>
-        <div *ngIf="carDetailForm">
+      <div *ngIf="carDetailForm" class="slide4" padding>
+        <ion-list no-lines>
           <form [formGroup]="carDetailForm">
             <ion-item>
               <ion-label floating>Photo</ion-label>
@@ -86,10 +100,11 @@
               <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate"></ion-datetime>
             </ion-item>
           </form>
-        </div>
-      </ion-list>
-      <button ion-button color="primary" (click)="save()">Upload</button>
+        </ion-list>
+      </div>
+      <button padding ion-button color="primary" (click)="save()">Upload</button>
     </ion-slide>
 
   </ion-slides>
+  <!-- </div> -->
 </ion-content>

@@ -22,18 +22,16 @@ export class ProfilePage {
   ) {
     this.userCollection = this.afStore.collection('users');
     this.user$ = this.userCollection.valueChanges();
-    // console.log();
-    this.auth.getCurrentUser().subscribe(res => {
+    this.auth.getCurrentUser().then(res => {
       console.log(res);
       this.loggedInUser = res;
     });
-    // this.loggedInUser = this.afStore.doc('users/')
   }
 
   ionViewCanEnter() {
     // console.log(this.aut)
-    // return this.auth.isLoggedIn();
-    return true;
+    return this.auth.isLoggedIn();
+    // return true;
   }
 
   logout() {

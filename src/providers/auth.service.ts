@@ -4,16 +4,16 @@ import { Platform } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
-// import { switchMap, first, take, map } from 'rxjs/operators';
 import { GooglePlus } from '@ionic-native/google-plus';
 
 import { User } from '../models/user.model';
-// import { Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { switchMap, first } from 'rxjs/operators';
 // import { map } from 'rxjs-compat/operator/map';
 
 @Injectable()
 export class AuthProvider {
-  // user$: Observable<User>;
+  user$: Observable<User>;
   userProfile: any = null;
   constructor(
     private platform: Platform,
@@ -21,25 +21,25 @@ export class AuthProvider {
     private afs: AngularFirestore,
     private gplus: GooglePlus
   ) {
-    this.afAuth.auth.onAuthStateChanged(user => {
-      if (user) {
-        this.userProfile = user;
-      } else {
-        this.userProfile = null;
-      }
-    });
-    // this.user$ = this.afAuth.authState.pipe(
-    //   switchMap(user => {
-    //     if (user) {
-    //       return this.afs.doc<any>(`users/${user.uid}`).valueChanges();
-    //     } else {
-    //       return of(null);
-    //     }
-    //   })
-    // );
+    // this.afAuth.auth.onAuthStateChanged(user => {
+    //   if (user) {
+    //     this.userProfile = user;
+    //   } else {
+    //     this.userProfile = null;
+    //   }
+    // });
+    this.user$ = this.afAuth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.afs.doc<any>(`users/${user.uid}`).valueChanges();
+        } else {
+          return of(null);
+        }
+      })
+    );
   }
 
-  googleLogin() {
+  async googleLogin() {
     // this.gplus
     //   .login({
     //     webClientId: '30802465799-hgtp7kinapiocrg12cbti9lgk50rsd5o.apps.googleusercontent.com',
@@ -57,37 +57,43 @@ export class AuthProvider {
     //       });
     //   });
 
-    try {
+    // try {
       if (this.platform.is('cordova')) {
-        this.nativeGoogleLogin();
+        await this.nativeGoogleLogin();
       } else {
-        this.webGoogleLogin();
+        await this.webGoogleLogin();
       }
-    } catch (error) {
-      console.log(error);
-    }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
-  nativeGoogleLogin() {
-    // try {
-    this.gplus
-      .login({
-        'webClientId': '30802465799-hgtp7kinapiocrg12cbti9lgk50rsd5o.apps.googleusercontent.com',
-        // 'webClientId':'30802465799-0boam07u5to1i1fv4rehdrchqbruj025.apps.googleusercontent.com',
-        // 'webClientId': '30802465799-jpvhojb4l9ov1toj7hp9fdkso73gnbbg.apps.googleusercontent.com',
-        'offline': true,
-        'scopes': 'profile email'
-      })
-      .then(res => {
-        const googleCredential = firebase.auth.GoogleAuthProvider.credential(res.idToken);
+  async nativeGoogleLogin() {
 
-        firebase
-          .auth()
-          .signInWithCredential(googleCredential)
-          .then(response => {
-            console.log('Firebase success: ' + JSON.stringify(response));
-          });
-      });
+    const gplusUser = await this.gplus.login({
+      'webClientId': '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
+      'offline': true,
+      'scopes': 'profile email'
+    })
+
+    return await this.afAuth.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken))
+    // try {
+    // this.gplus
+    //   .login({
+    //     'webClientId': '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
+    //     'offline': true,
+    //     'scopes': 'profile email'
+    //   })
+    //   .then(res => {
+    //     const googleCredential = firebase.auth.GoogleAuthProvider.credential(res.idToken);
+
+    //     firebase
+    //       .auth()
+    //       .signInWithCredential(googleCredential)
+    //       .then(response => {
+    //         console.log('Firebase success: ' + JSON.stringify(response));
+    //       });
+    //   });
 
     // .then(res => {
     //   console.log(res);
@@ -114,15 +120,14 @@ export class AuthProvider {
   async signOut() {
     await this.afAuth.auth.signOut();
     if (this.platform.is('cordova')) {
-      this.gplus.trySilentLogin()
       this.gplus.logout().then(res => console.log(' logged out!'));
     }
   }
 
   // Current user as a Promise. Useful for one-off operations.
   getCurrentUser() {
-    // return this.user$.pipe(first()).toPromise();
-    return this.afAuth.authState;
+    return this.user$.pipe(first()).toPromise();
+    // return this.afAuth.authState.toPromise();
     // return this.userProfile;
   }
 

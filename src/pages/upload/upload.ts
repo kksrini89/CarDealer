@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {
   IonicPage,
@@ -7,14 +7,12 @@ import {
   LoadingController,
   AlertController,
   Loading,
-  Tab
 } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import { AuthProvider } from '../../providers/auth.service';
 import { CommonProvider } from '../../providers/common.service';
 import { CarAdminProvider } from '../../providers/car-admin.service';
-import { DisplayPage } from '../display/display';
 import { AngularFireUploadTask, AngularFireStorage } from 'angularfire2/storage';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -24,7 +22,7 @@ import { finalize } from 'rxjs/operators';
   selector: 'page-upload',
   templateUrl: 'upload.html'
 })
-export class UploadPage {
+export class UploadPage implements AfterViewInit{
   tabsCtrl: Tabs;
   @ViewChild('carSlider') carSlider: any;
 
@@ -49,15 +47,19 @@ export class UploadPage {
     public auth: AuthProvider,
     private carService: CarAdminProvider,
     private commonService: CommonProvider
-  ) {}
+  ) { }
+
+  ngAfterViewInit() {
+    this.carSlider.autoHeight = true;
+  }
 
   ionViewCanEnter() {
-    // return this.auth.isLoggedIn();
+    return this.auth.isLoggedIn();
     // return this.auth.isLoggedIn().then(res => {
     //   console.log(res);
     //   return res;
     // });
-    return true;
+    // return true;
   }
 
   ionViewCanLeave() {
@@ -87,8 +89,22 @@ export class UploadPage {
 
   ionViewWillEnter() {
     this.tabsCtrl = this.navCtrl.parent;
+    // this.carSlider.autoHeight = true;
     this.loadForm();
   }
+
+  /*public slidesHeight: string | number;
+  public slidesMoving: boolean = true;
+  slideDidChange() {
+    this.slidesMoving = false;
+    let slideIndex : number = this.carSlider.getActiveIndex();
+    let currentSlide : Element = this.carSlider._slides[slideIndex];
+    this.slidesHeight = currentSlide.clientHeight;
+  }
+
+  slideWillChange() {
+    this.slidesMoving = true;
+  } */
 
   loadForm(): void {
     this.carDetailForm = this.formBuilder.group({
@@ -192,6 +208,11 @@ export class UploadPage {
         };
         console.log(newCar);
         await this.carService.addCar(newCar);
+        this.stockerForm.reset();
+        this.priceForm.reset();
+        this.regInfoForm.reset();
+        this.carDetailForm.reset();
+        this.submitAttempt = false;
       }
       this.loading.dismiss();
       // this.navCtrl.push('DisplayPage');

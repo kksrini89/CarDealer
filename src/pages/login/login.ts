@@ -20,10 +20,11 @@ export class LoginPage {
 
   async googleLogin() {
     this.auth
-      .googleLogin();
-    this.navCtrl.setRoot('TabsPage');
+      .googleLogin()
+      .then(() => this.navCtrl.setRoot('TabsPage'))
+      .catch(error => console.error(error));
     // this.navCtrl.setRoot()
-      // .then(() => this.navCtrl.setRoot('TabsPage'))
-      // .catch(err => console.log(err));
+    // .then(() => this.navCtrl.setRoot('TabsPage'))
+    // .catch(err => console.log(err));
   }
 }

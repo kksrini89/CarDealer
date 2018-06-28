@@ -1,17 +1,17 @@
 <ion-header>
 
-  <ion-navbar color="primary">
+  <ion-navbar color="secondary">
     <ion-title text-center>DEALS</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content full-screen padding>
 
   <div *ngIf="(carDealsList$ | async) as list">
     <ion-card *ngFor="let item of list" (click)="getDetail(item)">
-      <img src="{{item.photo}}" />
+      <img style="height: 200px;" [src]="item.photo ? item.photo : 'assets/imgs/no-img.png'" />
       <ion-card-content>
         <ion-card-title>
           {{item.make}}

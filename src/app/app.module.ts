@@ -5,7 +5,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { Firebase } from '@ionic-native/firebase';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { Camera } from '@ionic-native/camera';
 import { MyApp } from './app.component';
@@ -21,12 +20,12 @@ import { CommonProvider } from '../providers/common.service';
 // import { AuthProvider } from '../providers/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAH05o6tEQJBUyuh9zV8dSRGBG5e7cIcMc',
-  authDomain: 'own-carseller.firebaseapp.com',
-  databaseURL: 'https://own-carseller.firebaseio.com',
-  projectId: 'own-carseller',
-  storageBucket: 'own-carseller.appspot.com',
-  messagingSenderId: '30802465799'
+  apiKey: 'AIzaSyBsiZPo-nKIM_dXaFCL840TPgKZckbwa2I',
+  authDomain: 'cardealer-e8f8a.firebaseapp.com',
+  databaseURL: 'https://cardealer-e8f8a.firebaseio.com',
+  projectId: 'cardealer-e8f8a',
+  storageBucket: 'cardealer-e8f8a.appspot.com',
+  messagingSenderId: '698468554914'
 };
 
 // const prodFirebaseConfig = {
@@ -56,7 +55,6 @@ const firebaseConfig = {
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     Camera,
-    Firebase,
     GooglePlus,
     CarAdminProvider,
     CommonProvider
