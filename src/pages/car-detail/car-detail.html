@@ -1,0 +1,139 @@
+<ion-header>
+  <ion-navbar color="secondary">
+    <ion-title>DETAIL</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content full-screen>
+
+  <div *ngIf="selectedCar">
+    <div class="car-image">
+      <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'" alt="car image">
+    </div>
+    <ion-item>
+      <h2>Description :</h2>
+      <p>{{selectedCar.description}}</p>
+    </ion-item>
+
+    <ion-grid>
+      <ion-row  padding>
+        <ion-col>Make: </ion-col>
+        <ion-col >{{selectedCar.make}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Model: </ion-col>
+        <ion-col >{{selectedCar.model}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Make Year: </ion-col>
+        <ion-col >{{selectedCar.make_year}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Fuel Type: </ion-col>
+        <ion-col >{{selectedCar.fuel_type}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Model: </ion-col>
+        <ion-col >{{selectedCar.model}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>No. Of Owners: </ion-col>
+        <ion-col >{{selectedCar.number_of_owners}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Kms Driven: </ion-col>
+        <ion-col>{{selectedCar.kms_driven}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Model</ion-col>
+        <ion-col >{{selectedCar.model}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Mileage</ion-col>
+        <ion-col>{{selectedCar.mileage}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Warranty</ion-col>
+        <ion-col>{{selectedCar.warranty}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Car Accidental: </ion-col>
+        <ion-col>{{selectedCar.isCarAccidental? 'yes':'no'}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Car Certified: </ion-col>
+        <ion-col>{{selectedCar.isCarCertified ? 'yes':'no'}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Car Flood Affected: </ion-col>
+        <ion-col>{{selectedCar.isCarFloodAffected ? 'yes': 'no'}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Fixed: </ion-col>
+        <ion-col >{{selectedCar.isFixed ? 'yes':'no'}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Exchange Accepted: </ion-col>
+        <ion-col >{{selectedCar.isExchangeAccepted ? 'yes': 'no'}}</ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- <ion-card> -->
+
+      <!-- <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'"> -->
+
+      <!-- <ion-item>
+        <ion-icon name="football" item-start large></ion-icon>
+        <h2 *ngIf="selectedCar.stocker">{{selectedCar.stocker.model}}</h2>
+        <p>{{selectedCar.description}}</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="wine" item-start large></ion-icon>
+        <h2>{{selectedCar.mileage}}</h2>
+        <p *ngIf="selectedCar.priceWarranty">{{selectedCar.priceWarranty.warranty}}</p>
+      </ion-item>
+
+      <ion-item>
+        <span item-start>CarAccidental : {{selectedCar.isCarAccidental? 'yes':'no'}}</span>
+        <span item-start>CarCertified : {{selectedCar.isCarCertified ? 'yes':'no'}}</span>
+
+      </ion-item>
+
+    </ion-card> -->
+  </div>
+</ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <ion-header>
+
+  <ion-navbar color="secondary">
+    <ion-title>{{selectedCar.}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+</ion-content> -->

@@ -23,6 +23,7 @@
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="FadeSplashScreen" value="true" />
     <preference name="ShowSplashScreen" value="true" />
+    <preference name="orientation" value="portrait" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -84,6 +85,7 @@
     <allow-navigation href="http://192.168.0.100:8100" />
     <allow-navigation href="http://192.168.25.126:8100" />
     <allow-navigation href="http://192.168.25.174:8100" />
+    <allow-navigation href="http://192.168.225.41:8100" />
     <engine name="android" spec="^6.3.0" />
     <engine name="browser" spec="^4.1.0" />
     <engine name="ios" spec="4.5.4" />

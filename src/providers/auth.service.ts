@@ -40,6 +40,19 @@ export class AuthProvider {
   }
 
   async googleLogin() {
+    this.gplus
+      .login({
+        webClientId: '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
+        offline: true,
+        scopes: 'profile email'
+      })
+      .then(res => {
+        this.afAuth.auth
+          .signInWithCredential(firebase.auth.GoogleAuthProvider.credential(res.idToken))
+          .then(async res => {
+            await this.updateUserData(res);
+          });
+      });
     // this.gplus
     //   .login({
     //     webClientId: '30802465799-hgtp7kinapiocrg12cbti9lgk50rsd5o.apps.googleusercontent.com',
@@ -58,25 +71,31 @@ export class AuthProvider {
     //   });
 
     // try {
-      if (this.platform.is('cordova')) {
-        await this.nativeGoogleLogin();
-      } else {
-        await this.webGoogleLogin();
-      }
+
+    /*
+    if (this.platform.is('cordova')) {
+      await this.nativeGoogleLogin();
+    } else {
+      await this.webGoogleLogin();
+    }  */
+
     // } catch (error) {
     //   console.log(error);
     // }
   }
 
   async nativeGoogleLogin() {
-
     const gplusUser = await this.gplus.login({
-      'webClientId': '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
-      'offline': true,
-      'scopes': 'profile email'
-    })
+      webClientId: '698468554914-mr69c77ffau1uf5vq3mg7arf2ekhv86m.apps.googleusercontent.com',
+      offline: true,
+      scopes: 'profile email'
+    });
 
-    return await this.afAuth.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken))
+    this.afAuth.auth
+      .signInWithCredential(firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken))
+      .then(async res => {
+        await this.updateUserData(res);
+      });
     // try {
     // this.gplus
     //   .login({
@@ -139,7 +158,7 @@ export class AuthProvider {
     return !!user;
   }
 
-  private async updateUserData(user) {
+  public async updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const data: User = {

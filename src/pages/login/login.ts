@@ -18,10 +18,18 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  async googleLogin() {
+  googleLogin() {
     this.auth
       .googleLogin()
-      .then(() => this.navCtrl.setRoot('TabsPage'))
+      .then(() => {
+        this.auth.getCurrentUser().then(user => {
+          if (user.roles.admin || user.roles.editor) {
+            this.navCtrl.setRoot('TabsPage');
+          } else {
+            this.navCtrl.setRoot('SubscriberPage');
+          }
+        });
+      })
       .catch(error => console.error(error));
     // this.navCtrl.setRoot()
     // .then(() => this.navCtrl.setRoot('TabsPage'))

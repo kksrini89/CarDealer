@@ -10,7 +10,7 @@
 <ion-content full-screen padding>
 
   <div *ngIf="(carDealsList$ | async) as list">
-    <ion-card *ngFor="let item of list" (click)="getDetail(item)">
+    <ion-card *ngFor="let item of list" >
       <img style="height: 200px;" [src]="item.photo ? item.photo : 'assets/imgs/no-img.png'" />
       <ion-card-content>
         <ion-card-title>
@@ -21,6 +21,12 @@
           {{item.description}}
         </p>
       </ion-card-content>
+      <ion-item>
+        <button ion-button icon-start clear item-end (click)="getDetail(item)">
+          <ion-icon name="navigate"></ion-icon>
+          More
+        </button>
+      </ion-item>
     </ion-card>
 
     <br/>

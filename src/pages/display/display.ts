@@ -28,6 +28,6 @@ export class DisplayPage {
   }
 
   getDetail(car: Car) {
-    console.log(car);
+    this.navCtrl.push('CarDetailPage', { 'selected-car': JSON.stringify(car) });
   }
 }
