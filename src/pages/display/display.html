@@ -9,8 +9,15 @@
 
 <ion-content full-screen padding>
 
-  <div *ngIf="(carDealsList$ | async) as list">
-    <ion-card *ngFor="let item of list" >
+  <!-- <div *ngIf="carList"> -->
+    <ion-searchbar padding [showCancelButton]="true" placeholder="Search Car Model" [(ngModel)]="searchInput" (ionInput)="OnInput($event)"
+      (ionCancel)="OnCancel($event)" (ionClear)="OnCancel($event)">
+    </ion-searchbar>
+  <!-- </div> -->
+
+  <!-- <div *ngIf="(carDealsList$ | async) as list"> -->
+  <div *ngIf="carList">
+    <ion-card *ngFor="let item of carList">
       <img style="height: 200px;" [src]="item.photo ? item.photo : 'assets/imgs/no-img.png'" />
       <ion-card-content>
         <ion-card-title>
