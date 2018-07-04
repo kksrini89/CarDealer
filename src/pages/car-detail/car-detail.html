@@ -26,16 +26,16 @@
       </ion-row>
       <ion-row padding>
         <ion-col>Make Year: </ion-col>
-        <ion-col >{{selectedCar.make_year}}</ion-col>
+        <ion-col >{{selectedCar.make_year | date}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Fuel Type: </ion-col>
         <ion-col >{{selectedCar.fuel_type}}</ion-col>
       </ion-row>
-      <ion-row padding>
+      <!-- <ion-row padding>
         <ion-col>Model: </ion-col>
         <ion-col >{{selectedCar.model}}</ion-col>
-      </ion-row>
+      </ion-row> -->
       <ion-row padding>
         <ion-col>No. Of Owners: </ion-col>
         <ion-col >{{selectedCar.number_of_owners}}</ion-col>
@@ -44,10 +44,10 @@
         <ion-col>Kms Driven: </ion-col>
         <ion-col>{{selectedCar.kms_driven}}</ion-col>
       </ion-row>
-      <ion-row padding>
+      <!-- <ion-row padding>
         <ion-col>Model</ion-col>
         <ion-col >{{selectedCar.model}}</ion-col>
-      </ion-row>
+      </ion-row> -->
       <ion-row padding>
         <ion-col>Mileage</ion-col>
         <ion-col>{{selectedCar.mileage}}</ion-col>
