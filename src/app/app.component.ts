@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import * as firebase from 'firebase/app';
+
 import { AuthProvider } from '../providers/auth.service';
 
 // import { TabsPage } from '../pages/tabs/tabs';
@@ -21,6 +23,9 @@ export class MyApp {
     authService: AuthProvider
   ) {
     platform.ready().then(() => {
+      const firestore = firebase.firestore();
+      const settings = {timestampsInSnapshots: true};
+      firestore.settings(settings);
       authService.isLoggedIn().then(res => {
         if (res) {
           this.rootPage = 'TabsPage';

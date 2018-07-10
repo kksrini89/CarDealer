@@ -53,12 +53,22 @@
 
     <ion-item>
       <ion-label floating>Transmission Type</ion-label>
-      <ion-input formControlName="cTransmission_type" type="text" [class.invalid]="!stockerForm.controls.cTransmission_type.valid && (stockerForm.controls.cTransmission_type.dirty || submitAttempt)"></ion-input>
+      <!-- <ion-input formControlName="cTransmission_type" type="text" [class.invalid]="!stockerForm.controls.cTransmission_type.valid && (stockerForm.controls.cTransmission_type.dirty || submitAttempt)"></ion-input> -->
+      <ion-select formControlName="cTransmission_type" [class.invalid]="!stockerForm.controls.cTransmission_type.valid && (stockerForm.controls.cTransmission_type.dirty || submitAttempt)">
+        <ion-option *ngFor="let type of transmission_types" [value]="type">
+          {{type}}
+        </ion-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
       <ion-label floating>Fuel Type</ion-label>
-      <ion-input formControlName="cFuel_type" type="text" [class.invalid]="!stockerForm.controls.cFuel_type.valid && (stockerForm.controls.cFuel_type.dirty || submitAttempt)"></ion-input>
+      <!-- <ion-input formControlName="cFuel_type" type="text" [class.invalid]="!stockerForm.controls.cFuel_type.valid && (stockerForm.controls.cFuel_type.dirty || submitAttempt)"></ion-input> -->
+      <ion-select formControlName="cFuel_type" [class.invalid]="!stockerForm.controls.cFuel_type.valid && (stockerForm.controls.cFuel_type.dirty || submitAttempt)">
+        <ion-option *ngFor="let type of fuel_types" value="{{type}}">
+          {{type}}
+        </ion-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>

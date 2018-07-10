@@ -6,7 +6,7 @@ import {
   NavController,
   LoadingController,
   AlertController,
-  Loading,
+  Loading
 } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
@@ -22,7 +22,7 @@ import { finalize } from 'rxjs/operators';
   selector: 'page-upload',
   templateUrl: 'upload.html'
 })
-export class UploadPage implements AfterViewInit{
+export class UploadPage implements AfterViewInit {
   tabsCtrl: Tabs;
   @ViewChild('carSlider') carSlider: any;
 
@@ -47,7 +47,7 @@ export class UploadPage implements AfterViewInit{
     public auth: AuthProvider,
     private carService: CarAdminProvider,
     private commonService: CommonProvider
-  ) { }
+  ) {}
 
   ngAfterViewInit() {
     this.carSlider.autoHeight = true;
@@ -119,14 +119,14 @@ export class UploadPage implements AfterViewInit{
     });
 
     this.stockerForm = this.formBuilder.group({
-      cMake: ['value'],
-      cModel: ['value'],
-      cVarriant: ['value'],
+      cMake: [''],
+      cModel: [''],
+      cVarriant: [''],
       cMake_year: [Date.now()],
-      cNumber_of_owners: ['value'],
-      cKms_driven: ['value'],
-      cTransmission_type: ['value'],
-      cFuel_type: ['value'],
+      cNumber_of_owners: [''],
+      cKms_driven: [''],
+      cTransmission_type: [''],
+      cFuel_type: [''],
       cCondition: ['good'],
       cColor: ['red'],
       cVehicle_type: ['4 Gear'],
@@ -134,15 +134,16 @@ export class UploadPage implements AfterViewInit{
     });
 
     this.regInfoForm = this.formBuilder.group({
-      registrationPlace: ['Madurai'],
-      insurance_type: ['Joint'],
+      registrationPlace: [''],
+      insurance_type: [''],
       insurance_year: [Date.now()]
     });
 
     this.priceForm = this.formBuilder.group({
+      amount: [0],
       isFixed: [true],
       isExchangeAccepted: [false],
-      warranty: ['Joint']
+      warranty: ['']
     });
   }
 
@@ -194,6 +195,7 @@ export class UploadPage implements AfterViewInit{
           registrationPlace: this.regInfoForm.get('registrationPlace').value,
           insurance_type: this.regInfoForm.get('insurance_type').value,
           insurance_year: this.regInfoForm.get('insurance_year').value,
+          amount: this.priceForm.get('amount').value,
           isFixed: this.priceForm.get('isFixed').value,
           isExchangeAccepted: this.priceForm.get('isExchangeAccepted').value,
           warranty: this.priceForm.get('warranty').value,

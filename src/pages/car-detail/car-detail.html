@@ -11,7 +11,7 @@
       <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'" alt="car image">
     </div>
     <ion-item>
-      <h2>Description :</h2>
+      <h2>Description:</h2>
       <p>{{selectedCar.description}}</p>
     </ion-item>
 
@@ -29,8 +29,16 @@
         <ion-col >{{selectedCar.make_year | date}}</ion-col>
       </ion-row>
       <ion-row padding>
+        <ion-col>Price: </ion-col>
+        <ion-col >{{selectedCar.amount}}</ion-col>
+      </ion-row>
+      <ion-row padding>
         <ion-col>Fuel Type: </ion-col>
         <ion-col >{{selectedCar.fuel_type}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Transmission Type: </ion-col>
+        <ion-col >{{selectedCar.transmission_type}}</ion-col>
       </ion-row>
       <!-- <ion-row padding>
         <ion-col>Model: </ion-col>
@@ -49,11 +57,11 @@
         <ion-col >{{selectedCar.model}}</ion-col>
       </ion-row> -->
       <ion-row padding>
-        <ion-col>Mileage</ion-col>
+        <ion-col>Mileage: </ion-col>
         <ion-col>{{selectedCar.mileage}}</ion-col>
       </ion-row>
       <ion-row padding>
-        <ion-col>Warranty</ion-col>
+        <ion-col>Warranty: </ion-col>
         <ion-col>{{selectedCar.warranty}}</ion-col>
       </ion-row>
       <ion-row padding>

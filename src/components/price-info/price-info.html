@@ -1,6 +1,10 @@
 <div *ngIf="priceInfoForm">
   <form [formGroup]="priceInfoForm">
-
+    <ion-item>
+      <ion-label>Amount</ion-label>
+      <ion-input formControlName="amount"  type="number"
+      [class.invalid]="!priceInfoForm.controls.amount.valid && (priceInfoForm.controls.amount.dirty || submitAttempt)"></ion-input>
+    </ion-item>
     <ion-item>
       <ion-label>Is Fixed</ion-label>
       <ion-checkbox formControlName="isFixed"></ion-checkbox>
