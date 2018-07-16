@@ -10,9 +10,9 @@
 <ion-content full-screen padding>
 
   <!-- <div *ngIf="carList"> -->
-    <ion-searchbar padding [showCancelButton]="true" placeholder="Search Car Model" [(ngModel)]="searchInput" (ionInput)="OnInput($event)"
-      (ionCancel)="OnCancel($event)" (ionClear)="OnCancel($event)">
-    </ion-searchbar>
+  <ion-searchbar padding [showCancelButton]="true" placeholder="Search Car Model" [(ngModel)]="searchInput" (ionInput)="OnInput($event)"
+    (ionCancel)="OnCancel($event)" (ionClear)="OnCancel($event)">
+  </ion-searchbar>
   <!-- </div> -->
 
   <!-- <div *ngIf="(carDealsList$ | async) as list"> -->
@@ -29,6 +29,9 @@
         </p>
       </ion-card-content>
       <ion-item>
+        <button ion-button icon-start clear item-start (click)="deleteItem(item)">
+          <ion-icon name="trash"></ion-icon>
+          Delete</button>
         <button ion-button icon-start clear item-end (click)="getDetail(item)">
           <ion-icon name="navigate"></ion-icon>
           More

@@ -10,7 +10,7 @@ export class CarAdminProvider implements OnInit {
   car$: Observable<Car[]>;
 
   constructor(public afStore: AngularFirestore) {
-    this.carCollection = this.afStore.collection('cars');
+    this.carCollection = this.afStore.collection('cars', ref => ref.orderBy('createdDate', 'desc'));
     // this.car$ = this.carCollection.valueChanges();
     this.carCollection.snapshotChanges().map(item => {
       return item.map(snap => {
@@ -35,5 +35,9 @@ export class CarAdminProvider implements OnInit {
         return { id, ...data };
       });
     });
+  }
+
+  deleteCar(car: Car) {
+    return this.carCollection.doc(`${car.id}`).delete();
   }
 }

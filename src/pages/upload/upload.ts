@@ -206,7 +206,9 @@ export class UploadPage implements AfterViewInit {
           isCarAccidental: this.carDetailForm.get('isCarAccidental').value,
           isCarCertified: this.carDetailForm.get('isCarCertified').value,
           isCarFloodAffected: this.carDetailForm.get('isCarFloodAffected').value,
-          stock_entryDate: this.carDetailForm.get('stockEntryDate').value
+          stock_entryDate: this.carDetailForm.get('stockEntryDate').value,
+          createdBy: await this.auth.getCurrentUser(),
+          createdDate: Date.now
         };
         console.log(newCar);
         await this.carService.addCar(newCar);

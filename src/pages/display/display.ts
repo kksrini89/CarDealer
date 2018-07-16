@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, ToastController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs';
 
 import { Car } from '../../models/car.model';
@@ -18,6 +18,7 @@ export class DisplayPage {
 
   constructor(
     public navCtrl: NavController,
+    public toastCtrl: ToastController,
     public navParams: NavParams,
     public carProvider: CarAdminProvider
   ) {}
@@ -58,5 +59,14 @@ export class DisplayPage {
 
   getDetail(car: Car) {
     this.navCtrl.push('CarDetailPage', { 'selected-car': JSON.stringify(car) });
+  }
+
+  async deleteItem(car: any) {
+    await this.carProvider.deleteCar(car);
+    let toastCtrl = this.toastCtrl.create({
+      message: `${ car.model} Deleted successfully`,
+      duration: 3000
+    });
+    await toastCtrl.present();
   }
 }
