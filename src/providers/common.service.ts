@@ -3,7 +3,21 @@ import { AlertController } from 'ionic-angular';
 
 @Injectable()
 export class CommonProvider {
-  constructor(public alertCtrl: AlertController) {}
+  mobileNumberRegex = /^[0]?[789]d{9}$/;
+
+  constructor(public alertCtrl: AlertController) { }
+
+  /**
+   * To check valid data
+   * @param data
+   */
+  getvalid(data) {
+    if (data === undefined || data === null || data === '') {
+      return false;
+    } else {
+      return true;
+    };
+  };
 
   /**
    * To show alert globally

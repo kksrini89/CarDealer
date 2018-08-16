@@ -6,7 +6,8 @@ export interface Roles {
 
 export interface User {
   uid: String;
+  name: String;
   email: String;
   roles: Roles;
-  photoURL: String;
+  // photoURL: String;
 }

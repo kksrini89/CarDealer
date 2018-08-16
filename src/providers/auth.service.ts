@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+// import { HttpClient } from '@angular/common/http';
 
 import { Platform } from 'ionic-angular';
+import { GooglePlus } from '@ionic-native/google-plus';
+import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-import * as firebase from 'firebase/app';
-import { GooglePlus } from '@ionic-native/google-plus';
 
 import { User } from '../models/user.model';
 import { Observable, of } from 'rxjs';
@@ -17,6 +18,7 @@ export class AuthProvider {
   userProfile: any = null;
   constructor(
     private platform: Platform,
+    // private http: HttpClient,
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private gplus: GooglePlus
@@ -145,7 +147,11 @@ export class AuthProvider {
 
   // Current user as a Promise. Useful for one-off operations.
   getCurrentUser() {
-    return this.user$.pipe(first()).toPromise();
+    try {
+      return this.user$.pipe(first()).toPromise();
+    } catch (error) {
+      throw error;
+    }
     // return this.afAuth.authState.toPromise();
     // return this.userProfile;
   }
@@ -158,16 +164,41 @@ export class AuthProvider {
     return !!user;
   }
 
+  getUserProfile(user: User) {
+    try {
+      return this.afs
+        .doc(`users/${user.uid}`)
+        .valueChanges()
+        .pipe(first())
+        .toPromise();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getUser(email: string) {
+    try {
+      return this.afs
+        .collection('users', ref => ref.where('email', '==', email))
+        .valueChanges()
+        .pipe(first())
+        .toPromise();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const data: User = {
+      name: user.name,
       uid: user.uid,
       email: user.email,
       roles: {
         subscriber: true
-      },
-      photoURL: user.photoURL || 'https://goo.gl/7kz9qG'
+      }
+      // photoURL: user.photoURL || 'https://goo.gl/7kz9qG'
     };
     return await userRef.set(data, { merge: true });
   }
@@ -198,5 +229,20 @@ export class AuthProvider {
       }
     }
     return false;
+  }
+
+  // Login
+  signInWithEmail(credentials) {
+    console.log('Sign in with email');
+    return this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
+  }
+
+  // Register
+  signUp(credentials) {
+    return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+  }
+
+  resetPassword(email: string) {
+    return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 }

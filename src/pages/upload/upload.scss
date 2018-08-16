@@ -8,6 +8,35 @@
   }
 }
 
+.gallery-icon {
+  color: white;
+}
+
+@mixin img-button {
+  border-radius: 50%;
+  height: 50px;
+  width: 50%;
+}
+.car-img-button {
+  @include img-button();
+  background-color: #fb6139;
+}
+
+.img-item {
+  position: relative;
+  // width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  display: inline-block;
+
+  .remove-button-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .swiper-slide {
   display: block;
 }

@@ -8,7 +8,7 @@ export class Car {
   stocker: Stocker;
   regulatoryInfo: RegulatoryInfo;
   priceWarranty: PriceWarranty;
-  photo: String;
+  photo: String[];
   duration: Number;
   mileage: String;
   description: String;

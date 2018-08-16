@@ -23,7 +23,7 @@ export class CarAdminProvider implements OnInit {
 
   ngOnInit() {}
 
-  async addCar(car: Car) {
+  async addCar(car: any) {
     await this.afStore.collection('cars').add(car);
   }
 

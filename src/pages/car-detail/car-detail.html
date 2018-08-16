@@ -8,7 +8,17 @@
 
   <div *ngIf="selectedCar">
     <div class="car-image">
-      <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'" alt="car image">
+      <div *ngIf="selectedCar.photo;else noImage">
+        <ion-slides autoplay="2500" loop="true">
+          <ion-slide *ngFor="let img of selectedCar.photo">
+            <img [src]="img" alt="car image">
+          </ion-slide>
+        </ion-slides>
+        <!-- <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'" alt="car image"> -->
+      </div>
+      <template #noImage>
+        <img [src]="'assets/imgs/no-img.png'" alt="No Image available">
+      </template>
     </div>
     <ion-item>
       <h2>Description:</h2>
@@ -16,29 +26,54 @@
     </ion-item>
 
     <ion-grid>
-      <ion-row  padding>
+      <ion-row padding>
+        <ion-col>Dealer Name: </ion-col>
+        <ion-col>{{selectedCar.name}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Showroom Name: </ion-col>
+        <ion-col>{{selectedCar.showroomName}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Address: </ion-col>
+        <ion-col>{{selectedCar.address}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>City: </ion-col>
+        <ion-col>{{selectedCar.city}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>State: </ion-col>
+        <ion-col>{{selectedCar.state}}</ion-col>
+      </ion-row>
+      <ion-row padding>
+        <ion-col>Mobile Number: </ion-col>
+        <ion-col>{{selectedCar.contact_no}}</ion-col>
+      </ion-row>
+
+      <ion-row padding>
         <ion-col>Make: </ion-col>
-        <ion-col >{{selectedCar.make}}</ion-col>
+        <ion-col>{{selectedCar.make}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Model: </ion-col>
-        <ion-col >{{selectedCar.model}}</ion-col>
+        <ion-col>{{selectedCar.model}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Make Year: </ion-col>
-        <ion-col >{{selectedCar.make_year | date}}</ion-col>
+        <ion-col>{{selectedCar.make_year | date}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Price: </ion-col>
-        <ion-col >{{selectedCar.amount}}</ion-col>
+        <ion-col>{{selectedCar.amount}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Fuel Type: </ion-col>
-        <ion-col >{{selectedCar.fuel_type}}</ion-col>
+        <ion-col>{{selectedCar.fuel_type}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Transmission Type: </ion-col>
-        <ion-col >{{selectedCar.transmission_type}}</ion-col>
+        <ion-col>{{selectedCar.transmission_type}}</ion-col>
       </ion-row>
       <!-- <ion-row padding>
         <ion-col>Model: </ion-col>
@@ -46,7 +81,7 @@
       </ion-row> -->
       <ion-row padding>
         <ion-col>No. Of Owners: </ion-col>
-        <ion-col >{{selectedCar.number_of_owners}}</ion-col>
+        <ion-col>{{selectedCar.number_of_owners}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Kms Driven: </ion-col>
@@ -78,19 +113,19 @@
       </ion-row>
       <ion-row padding>
         <ion-col>Fixed: </ion-col>
-        <ion-col >{{selectedCar.isFixed ? 'yes':'no'}}</ion-col>
+        <ion-col>{{selectedCar.isFixed ? 'yes':'no'}}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Exchange Accepted: </ion-col>
-        <ion-col >{{selectedCar.isExchangeAccepted ? 'yes': 'no'}}</ion-col>
+        <ion-col>{{selectedCar.isExchangeAccepted ? 'yes': 'no'}}</ion-col>
       </ion-row>
     </ion-grid>
 
     <!-- <ion-card> -->
 
-      <!-- <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'"> -->
+    <!-- <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'"> -->
 
-      <!-- <ion-item>
+    <!-- <ion-item>
         <ion-icon name="football" item-start large></ion-icon>
         <h2 *ngIf="selectedCar.stocker">{{selectedCar.stocker.model}}</h2>
         <p>{{selectedCar.description}}</p>

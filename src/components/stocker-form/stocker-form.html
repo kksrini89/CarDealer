@@ -29,7 +29,7 @@
           </ion-item> -->
 
     <ion-item>
-      <ion-label>Make Year and Month</ion-label>
+      <ion-label floating>Make Year and Month</ion-label>
       <ion-datetime formControlName="cMake_year" displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY"></ion-datetime>
     </ion-item>
 
@@ -91,7 +91,7 @@
 
     <ion-item>
       <ion-label floating>Inspection Valid Until</ion-label>
-      <ion-datetime formControlName="cInspection_valid_until" displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" [class.invalid]="!stockerForm.controls.cInspection_valid_until.valid && (stockerForm.controls.cInspection_valid_until.dirty || submitAttempt)"></ion-datetime>
+      <ion-datetime formControlName="cInspection_valid_until" min="2016" max="2025-12-31" displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" [class.invalid]="!stockerForm.controls.cInspection_valid_until.valid && (stockerForm.controls.cInspection_valid_until.dirty || submitAttempt)"></ion-datetime>
     </ion-item>
 
 

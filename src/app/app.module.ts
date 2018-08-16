@@ -5,8 +5,11 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { HttpClientModule } from '@angular/common/http';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { Camera } from '@ionic-native/camera';
+import { Network } from '@ionic-native/network';
+import { ImagePicker } from '@ionic-native/image-picker';
 import { MyApp } from './app.component';
 
 // import { HomePage } from '../pages/home/home';
@@ -17,6 +20,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { CarAdminProvider } from '../providers/car-admin.service';
 import { ComponentsModule } from '../components/components.module';
 import { CommonProvider } from '../providers/common.service';
+import { SignupPage } from '../pages/signup/signup';
 // import { AuthProvider } from '../providers/auth';
 
 const firebaseConfig = {
@@ -38,7 +42,7 @@ const firebaseConfig = {
 // };
 
 @NgModule({
-  declarations: [MyApp],
+  declarations: [MyApp, SignupPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
@@ -46,16 +50,19 @@ const firebaseConfig = {
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireAuthModule,
+    HttpClientModule,
     ComponentsModule
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp],
+  entryComponents: [MyApp, SignupPage],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     Camera,
+    Network,
     GooglePlus,
+    ImagePicker,
     CarAdminProvider,
     CommonProvider
   ]

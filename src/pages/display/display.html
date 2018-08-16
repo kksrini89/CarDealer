@@ -29,7 +29,7 @@
         </p>
       </ion-card-content>
       <ion-item>
-        <button ion-button icon-start clear item-start (click)="deleteItem(item)">
+        <button ion-button icon-start clear item-start (click)="deleteItem(item)" *ngIf="(user?.roles.admin) || (user?.uid === item?.createdBy?.uid)">
           <ion-icon name="trash"></ion-icon>
           Delete</button>
         <button ion-button icon-start clear item-end (click)="getDetail(item)">

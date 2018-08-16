@@ -12,6 +12,41 @@
 
     <ion-slide>
       <div padding>
+        <ion-item-group>
+          <ion-item-divider color="light">DEALER INFO</ion-item-divider>
+          <ion-item padding>
+            <ion-label floating>Dealer Name</ion-label>
+            <ion-input [(ngModel)]="dealerForm.name" type="text"></ion-input>
+          </ion-item>
+          <ion-item padding>
+            <ion-label floating>Showroom Name</ion-label>
+            <ion-input [(ngModel)]="dealerForm.showroomName" type="text"></ion-input>
+          </ion-item>
+          <ion-item padding>
+            <ion-label floating>Address</ion-label>
+            <ion-input [(ngModel)]="dealerForm.address" type="text"></ion-input>
+          </ion-item>
+          <ion-item padding>
+            <ion-label floating>City</ion-label>
+            <ion-input [(ngModel)]="dealerForm.city" type="text"></ion-input>
+          </ion-item>
+          <ion-item padding>
+            <ion-label floating>State</ion-label>
+            <ion-input [(ngModel)]="dealerForm.state" type="text"></ion-input>
+          </ion-item>
+          <ion-item padding>
+            <ion-label floating>Contact Number</ion-label>
+            <ion-input [(ngModel)]="dealerForm.contact_no" type="number"></ion-input>
+          </ion-item>
+          <!-- <ion-item *ngIf="!this.dealerForm.isMobileNumberValid">
+              <p>Please enter a valid mobile number.</p>
+            </ion-item> -->
+        </ion-item-group>
+      </div>
+    </ion-slide>
+
+    <ion-slide>
+      <div padding>
         <p style="font-family:open-sans; font-size:14px; color: #d3c719fa">Please fill the
           <b>Car</b> details.</p>
 
@@ -48,20 +83,73 @@
     </ion-slide>
 
     <ion-slide>
+      <div style="height: 100%; margin-top: 15vh;">
+        <div padding>
+          <ion-grid>
+            <ion-row>
+              <ion-col item-center col-6>
+                <button class="car-img-button" icon-only clear (click)="addFromGallery('camera')">
+                  <ion-icon class="gallery-icon" name="camera"></ion-icon>
+                </button>
+              </ion-col>
+              <ion-col item-center col-6>
+                <button class="car-img-button" icon-only clear (click)="addFromGallery('gallery')">
+                  <ion-icon class="gallery-icon" name="images"></ion-icon>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+        <div padding>
+          <ion-grid>
+            <ion-row>
+              <ion-col *ngFor="let image of selectedImages">
+                <div class="img-item">
+                  <img src="{{'data:image/jpg;base64,' + image}}" alt="album">
+                  <span class="remove-button-icon" (click)="removeImage(image)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <!-- <ion-list>
+            <ion-item *ngFor="let image of selectedImages">
+              <ion-thumbnail item-center>
+                <img [src]="image">
+              </ion-thumbnail>
+              <button ion-button item-right (click)="removeImage(image)"></button>
+            </ion-item>
+          </ion-list> -->
+        </div>
+      </div>
+    </ion-slide>
+
+    <ion-slide>
       <div *ngIf="carDetailForm" class="slide4" padding>
         <ion-list no-lines>
           <form [formGroup]="carDetailForm">
-            <ion-item>
+            <!-- <ion-item>
               <ion-label floating>Photo</ion-label>
               <ion-input formControlName="photo" type="text" [class.invalid]="!carDetailForm.controls.photo.valid
                   && (carDetailForm.controls.photo.dirty || submitAttempt)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-icon name="image" center (click)="addFromGallery()"></ion-icon>
+              <ion-icon name="image" item-start (click)="addFromGallery('cam')"></ion-icon>
+              <ion-icon name="image" item-center (click)="addFromGallery('gallery')"></ion-icon>
             </ion-item>
             <ion-item>
+              <ion-grid>
+                <ion-row>
+                  <ion-list>
+                    <ion-item *ngFor="let p of selectedImages"></ion-item>
+                  </ion-list>
+                </ion-row>
+              </ion-grid>
+            </ion-item> -->
+            <ion-item>
               <ion-label floating>Duration</ion-label>
-              <ion-input formControlName="duration" type="number"></ion-input>
+              <ion-input formControlName="duration" type="text"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label floating>Mileage</ion-label>
@@ -97,7 +185,8 @@
             </ion-item> -->
             <ion-item>
               <ion-label>Stock Entry Date</ion-label>
-              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate"></ion-datetime>
+              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate"
+              min="2010" max="2025-12-31"></ion-datetime>
             </ion-item>
           </form>
         </ion-list>

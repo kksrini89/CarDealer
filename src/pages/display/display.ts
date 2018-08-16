@@ -1,9 +1,17 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ToastController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  ToastController,
+  NavParams,
+  AlertController
+} from 'ionic-angular';
 import { Observable } from 'rxjs';
 
-import { Car } from '../../models/car.model';
 import { CarAdminProvider } from '../../providers/car-admin.service';
+import { AuthProvider } from '../../providers/auth.service';
+import { Car } from '../../models/car.model';
+import { User } from '../../models/user.model';
 
 @IonicPage()
 @Component({
@@ -13,18 +21,22 @@ import { CarAdminProvider } from '../../providers/car-admin.service';
 export class DisplayPage {
   searchInput: string = '';
 
+  user: User;
   carDealsList$: Observable<any[]>;
   carList: any[];
 
   constructor(
     public navCtrl: NavController,
     public toastCtrl: ToastController,
+    public alertCtrl: AlertController,
     public navParams: NavParams,
+    public authService: AuthProvider,
     public carProvider: CarAdminProvider
   ) {}
 
   ionViewWillEnter() {
     this.carDealsList$ = this.carProvider.getCars();
+    this.authService.getCurrentUser().then(res => (this.user = res));
     this.carDealsList$.subscribe(items => (this.carList = items));
   }
 
@@ -62,11 +74,38 @@ export class DisplayPage {
   }
 
   async deleteItem(car: any) {
-    await this.carProvider.deleteCar(car);
-    let toastCtrl = this.toastCtrl.create({
-      message: `${ car.model} Deleted successfully`,
-      duration: 3000
-    });
-    await toastCtrl.present();
+    try {
+      console.log(car);
+      // const user = await this.authService.getCurrentUser();
+      // console.log(user);
+      if (car.hasOwnProperty('createdBy') && this.user.hasOwnProperty('uid')) {
+        if (
+          this.user.roles.admin ||
+          this.user.roles.editor ||
+          car.createdBy.uid === this.user.uid
+        ) {
+          // const alert = this.alertCtrl.create({
+          //   title: 'Unauthorized!',
+          //   subTitle: `You can not delete since you're not the creator for this!`,
+          //   buttons: ['OK']
+          // });
+          // alert.present();
+          await this.carProvider.deleteCar(car);
+          let toastCtrl = this.toastCtrl.create({
+            message: `${car.model} Deleted successfully`,
+            duration: 3000
+          });
+          await toastCtrl.present();
+        }
+      }
+    } catch (error) {
+      this.toastCtrl
+        .create({
+          message: `${error}`,
+          duration: 3000
+        })
+        .present();
+      throw error;
+    }
   }
 }
