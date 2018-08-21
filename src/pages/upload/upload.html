@@ -105,7 +105,7 @@
             <ion-row>
               <ion-col *ngFor="let image of selectedImages">
                 <div class="img-item">
-                  <img src="{{'data:image/jpg;base64,' + image}}" alt="album">
+                  <img src="{{image}}" alt="album">
                   <span class="remove-button-icon" (click)="removeImage(image)">
                     <i class="fa fa-times" aria-hidden="true"></i>
                   </span>

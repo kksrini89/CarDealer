@@ -86,9 +86,6 @@
     <allow-navigation href="http://192.168.25.126:8100" />
     <allow-navigation href="http://192.168.25.174:8100" />
     <allow-navigation href="http://192.168.225.41:8100" />
-    <engine name="android" spec="^6.3.0" />
-    <engine name="browser" spec="^4.1.0" />
-    <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-googleplus" spec="^5.3.0">
@@ -98,8 +95,8 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.19" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
-    <plugin name="cordova-plugin-telerik-imagepicker" spec="^2.2.2">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="To upload car images" />
-    </plugin>
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <engine name="browser" spec="^4.1.0" />
+    <engine name="ios" spec="4.5.4" />
+    <engine name="android" spec="~6.3.0" />
 </widget>

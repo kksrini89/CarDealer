@@ -353,23 +353,17 @@ export class UploadPage implements AfterViewInit {
   /**
    * Image chosen from mobile gallery
    */
-  private addFromMobileGallery() {
-    try {
-      let imagePickerOptions: ImagePickerOptions = {
-        maximumImagesCount: 8,
-        outputType: 1
+ addFromMobileGallery() {
+    let imagePickerOptions: ImagePickerOptions = {
+        maximumImagesCount: 8
       };
 
-      return this.imagePicker.getPictures(imagePickerOptions).then(
-        // file_uris => this._navCtrl.push(GalleryPage, {images: file_uris}),
-        images => {
-          return images;
-        },
-        err => err //this.commonService.errorAlert('Error', `Can't take pictures!`)
-      );
-    } catch (error) {
-      throw error;
-    }
+      this.imagePicker.getPictures(imagePickerOptions).then((results) => {
+        return results;
+      }, (err) => {
+        console.error(err);
+        return err;
+      });
   }
 
   /**
@@ -379,7 +373,7 @@ export class UploadPage implements AfterViewInit {
     try {
       const options: CameraOptions = {
         quality: 33,
-        destinationType: this.camera.DestinationType.DATA_URL,
+        destinationType: this.camera.DestinationType.FILE_URI,
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
         correctOrientation: true,
@@ -408,7 +402,15 @@ export class UploadPage implements AfterViewInit {
     try {
       switch (choice) {
         case 'gallery':
-          this.selectedImages = await this.addFromMobileGallery();
+          // this.selectedImages = await this.addFromMobileGallery();
+          let imagePickerOptions: ImagePickerOptions = {
+            maximumImagesCount: 8
+          };
+          this.imagePicker.getPictures(imagePickerOptions).then((results) => {
+            this.selectedImages = results;
+          }, (err) => {
+            console.error(err);
+          });
           break;
         case 'camera':
           const res = await this.addFromCamera();

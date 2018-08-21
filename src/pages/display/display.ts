@@ -12,6 +12,8 @@ import { CarAdminProvider } from '../../providers/car-admin.service';
 import { AuthProvider } from '../../providers/auth.service';
 import { Car } from '../../models/car.model';
 import { User } from '../../models/user.model';
+import { UploadPage } from '../upload/upload';
+
 
 @IonicPage()
 @Component({
@@ -107,5 +109,8 @@ export class DisplayPage {
         .present();
       throw error;
     }
+  }
+  pushtoupload() {
+    this.navCtrl.push(UploadPage);
   }
 }
