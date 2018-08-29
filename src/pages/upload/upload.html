@@ -102,11 +102,23 @@
         </div>
         <div padding>
           <ion-grid>
-            <ion-row>
-              <ion-col *ngFor="let image of selectedImages">
+            <ion-row *ngIf="galleryImages && galleryImages.length > 0">
+              <ion-col *ngFor="let image of galleryImages">
+                <div class="img-item">
+                  <!-- <img src="{{'data:image/jpg;base64,' + image}}" alt="album"> -->
+                  <img src="{{image}}" alt="album">
+                  <span class="remove-button-icon" (click)="removeImage(galleryImages, image)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="cameraImages && cameraImages.length > 0">
+              <ion-col *ngFor="let image of cameraImages">
                 <div class="img-item">
                   <img src="{{'data:image/jpg;base64,' + image}}" alt="album">
-                  <span class="remove-button-icon" (click)="removeImage(image)">
+                  <!-- <img src="{{image}}" alt="album"> -->
+                  <span class="remove-button-icon" (click)="removeImage(cameraImages, image)">
                     <i class="fa fa-times" aria-hidden="true"></i>
                   </span>
                 </div>

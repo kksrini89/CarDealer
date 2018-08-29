@@ -9,12 +9,16 @@
   <div *ngIf="selectedCar">
     <div class="car-image">
       <div *ngIf="selectedCar.photo;else noImage">
-        <ion-slides autoplay="2500" loop="true">
-          <ion-slide *ngFor="let img of selectedCar.photo">
-            <img [src]="img" alt="car image">
+        <ion-slides autoplay="2500" loop="true" pager="true" paginationType="bullets" *ngIf="selectedCar.photo && selectedCar.photo.length >1">
+          <!-- <ion-slide *ngFor="let img of selectedCar.photo">
+            <img src="{{img}}" alt="car image">
+          </ion-slide> -->
+          <ion-slide *ngFor="let item of selectedCar.photo">
+            <img src="{{item}}" />
           </ion-slide>
         </ion-slides>
-        <!-- <img [src]="selectedCar.photo ? selectedCar.photo: 'assets/imgs/no-img.png'" alt="car image"> -->
+        <img src="{{selectedCar.photo[0]}}" alt="car image" *ngIf="selectedCar.photo && selectedCar.photo.length ==1">
+        <img src="assets/imgs/no-img.png" alt="car image" *ngIf="selectedCar.photo && selectedCar.photo.length ==0">
       </div>
       <template #noImage>
         <img [src]="'assets/imgs/no-img.png'" alt="No Image available">

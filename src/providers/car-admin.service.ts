@@ -9,6 +9,8 @@ export class CarAdminProvider implements OnInit {
   carCollection: AngularFirestoreCollection<Car>;
   car$: Observable<Car[]>;
 
+  carSelectedImages: any[];
+
   constructor(public afStore: AngularFirestore) {
     this.carCollection = this.afStore.collection('cars', ref => ref.orderBy('createdDate', 'desc'));
     // this.car$ = this.carCollection.valueChanges();
@@ -19,6 +21,7 @@ export class CarAdminProvider implements OnInit {
         return { id, ...data };
       });
     });
+    this.carSelectedImages = [];
   }
 
   ngOnInit() {}

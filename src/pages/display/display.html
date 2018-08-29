@@ -18,7 +18,13 @@
   <!-- <div *ngIf="(carDealsList$ | async) as list"> -->
   <div *ngIf="carList">
     <ion-card *ngFor="let item of carList">
-      <img style="height: 200px;" [src]="item.photo ? item.photo : 'assets/imgs/no-img.png'" />
+      <ion-slides autoplay="2500" loop="true" pager="true" paginationType="bullets" *ngIf="item.photo && item.photo.length >1">
+        <ion-slide *ngFor="let item of item.photo">
+          <img src="{{item}}" alt="car image"/>
+        </ion-slide>
+      </ion-slides>
+      <img *ngIf="item.photo && item.photo.length ==0" style="height: 200px" src="assets/imgs/no-img.png" />
+      <img *ngIf="item.photo && item.photo.length ==1" style="height: 200px" src="{{item.photo[0]}}" />
       <ion-card-content>
         <ion-card-title>
           {{item.make}}

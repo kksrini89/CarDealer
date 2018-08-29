@@ -10,8 +10,8 @@ import {
   Loading
 } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
-// import * as firebase from 'firebase/app';
+import { ImagePicker } from '@ionic-native/image-picker';
+import * as firebase from 'firebase/app';
 import { AngularFireUploadTask, AngularFireStorage } from 'angularfire2/storage';
 
 import { AuthProvider } from '../../providers/auth.service';
@@ -42,6 +42,8 @@ export class UploadPage implements AfterViewInit {
   public submitAttempt: boolean = false;
   public loading: Loading;
   public selectedImages: any[];
+  public cameraImages: any[];
+  public galleryImages: any[];
 
   constructor(
     public formBuilder: FormBuilder,
@@ -57,6 +59,8 @@ export class UploadPage implements AfterViewInit {
     private commonService: CommonProvider
   ) {
     this.selectedImages = [];
+    this.galleryImages = [];
+    this.cameraImages = [];
     this.dealerForm = {
       name: '',
       showroomName: '',
@@ -261,10 +265,14 @@ export class UploadPage implements AfterViewInit {
         newCar.createdDate = Date.now();
         // let photo_Urls: String[] = [];
         // Car Images uploading
-        const data = await this.uploadPics();
-        if (data !== null && data !== undefined) {
-          newCar.photo = data;
-        }
+        // const data = await this.uploadPics();
+        // if (data !== null && data !== undefined) {
+        //   newCar.photo = data;
+        // }
+        newCar.photo =
+          this.carService.carSelectedImages && this.carService.carSelectedImages.length > 0
+            ? this.carService.carSelectedImages
+            : [];
         // Dealer details
         newCar.name = this.dealerForm.name;
         newCar.showroomName = this.dealerForm.showroomName;
@@ -283,6 +291,10 @@ export class UploadPage implements AfterViewInit {
         this.regInfoForm.reset();
         this.carDetailForm.reset();
         // this.resetDealerDetails();
+        this.selectedImages = [];
+        this.galleryImages = [];
+        this.cameraImages = [];
+        this.carService.carSelectedImages = [];
         this.submitAttempt = false;
       }
       this.loading.dismiss();
@@ -355,18 +367,51 @@ export class UploadPage implements AfterViewInit {
    */
   private addFromMobileGallery() {
     try {
-      let imagePickerOptions: ImagePickerOptions = {
-        maximumImagesCount: 8,
-        outputType: 1
-      };
-
-      return this.imagePicker.getPictures(imagePickerOptions).then(
-        // file_uris => this._navCtrl.push(GalleryPage, {images: file_uris}),
-        images => {
-          return images;
+      this.imagePicker.hasReadPermission().then(
+        result => {
+          if (result == false) {
+            // no callbacks required as this opens a popup which returns async
+            this.imagePicker.requestReadPermission();
+          } else if (result == true) {
+            this.imagePicker
+              .getPictures({
+                maximumImagesCount: 4
+              })
+              .then(
+                results => {
+                  this.carService.carSelectedImages = [];
+                  for (var i = 0; i < results.length; i++) {
+                    // this.uploadImageToFirebase(results[i]);
+                    this.newUploadImage(results[i]).then(url =>
+                      this.carService.carSelectedImages.push(url)
+                    ); //carPicImages.push(url));
+                  }
+                  if (results && typeof results === 'object' && results.constructor === Array) {
+                    this.selectedImages = results;
+                    this.cameraImages = [];
+                    this.galleryImages = results;
+                  }
+                },
+                err => console.log(err)
+              );
+          }
         },
-        err => err //this.commonService.errorAlert('Error', `Can't take pictures!`)
+        err => {
+          console.log(err);
+        }
       );
+
+      // let imagePickerOptions: ImagePickerOptions = {
+      //   maximumImagesCount: 8,
+      //   outputType: 1
+      // };
+      // return this.imagePicker.getPictures(imagePickerOptions).then(
+      //   // file_uris => this._navCtrl.push(GalleryPage, {images: file_uris}),
+      //   images => {
+      //     return images;
+      //   },
+      //   err => err //this.commonService.errorAlert('Error', `Can't take pictures!`)
+      // );
     } catch (error) {
       throw error;
     }
@@ -377,6 +422,7 @@ export class UploadPage implements AfterViewInit {
    */
   private addFromCamera() {
     try {
+      // let carPicImages: any[] = [];
       const options: CameraOptions = {
         quality: 33,
         destinationType: this.camera.DestinationType.DATA_URL,
@@ -387,12 +433,28 @@ export class UploadPage implements AfterViewInit {
         // sourceType: 0
       };
 
-      return this.camera.getPicture(options).then(
-        imageData => imageData,
-        // let base64Image = 'data:image/jpeg;base64,' + imageData;
-        // this.uploadImage(base64Image);
-        err => err
-      );
+      this.camera.getPicture(options).then(imageData => {
+        // this.selectedImages = imageData !== null ? [imageData] : [];
+        this.selectedImages = [];
+        this.selectedImages.push(imageData);
+        this.galleryImages = [];
+        this.cameraImages = [];
+        this.cameraImages.push(imageData);
+        this.newCameraUploadImage('data:image/jpeg;base64,' + imageData).then(url => {
+          this.carService.carSelectedImages = [];
+          this.carService.carSelectedImages.push(url);
+        });
+        // this.newUploadImage(imageData).then(url => {
+        //   this.carService.carSelectedImages = [];
+        //   this.carService.carSelectedImages.push(url);
+        // });
+      });
+      // return this.camera.getPicture(options).then(
+      //   imageData => imageData,
+      //   // let base64Image = 'data:image/jpeg;base64,' + imageData;
+      //   // this.uploadImage(base64Image);
+      //   err => err
+      // );
     } catch (error) {
       throw error;
     }
@@ -404,15 +466,15 @@ export class UploadPage implements AfterViewInit {
    *  sourceType = 1 // Camera
    *  sourceType = 2 // Saved Photo Album
    */
-  async addFromGallery(choice: String) {
+  addFromGallery(choice: String) {
     try {
       switch (choice) {
         case 'gallery':
-          this.selectedImages = await this.addFromMobileGallery();
+          this.addFromMobileGallery();
           break;
         case 'camera':
-          const res = await this.addFromCamera();
-          this.selectedImages = res !== null ? [res] : [];
+          this.addFromCamera();
+          // this.selectedImages = res !== null ? [res] : [];
           break;
         default:
           break;
@@ -422,33 +484,97 @@ export class UploadPage implements AfterViewInit {
     }
   }
 
-  uploadImage(base64Image) {
-    const filePath = `uploads/images/${new Date().getTime()}`;
-    const ref = this.afStorage.ref(filePath);
-    this.task = ref.putString(base64Image, 'data_url');
-    // this.percentageChanges = this.task.percentageChanges();
-    return this.task
-      .snapshotChanges()
-      .pipe(
-        finalize(() => {
-          // return ref.getDownloadURL();
-          // ref.getDownloadURL().subscribe(url => url);
-          ref.getDownloadURL().subscribe(url => {
-            return url;
-            // this.carDetailForm.get('photo').setValue(this.downloadURL);
-          });
-        })
-      )
-      .subscribe();
+  newEncodeImageUri(imageUri, callback) {
+    var c = document.createElement('canvas');
+    var ctx = c.getContext('2d');
+    var img = new Image();
+    img.onload = function() {
+      var aux: any = this;
+      c.width = aux.width;
+      c.height = aux.height;
+      ctx.drawImage(img, 0, 0);
+      var dataURL = c.toDataURL('image/jpeg');
+      callback(dataURL);
+    };
+    img.src = imageUri;
+  }
+
+  newCameraUploadImage(image64) {
+    //base64Image
+    return new Promise<any>((resolve, reject) => {
+      let storageRef = firebase.storage().ref();
+      let imageRef = storageRef
+        .child('uploads')
+        .child('images')
+        .child(`${new Date().getTime()}`);
+      // this.newEncodeImageUri(imageURI, function(image64) {
+      imageRef.putString(image64, 'data_url').then(
+        snapshot => {
+          resolve(snapshot.downloadURL);
+        },
+        err => {
+          reject(err);
+        }
+      );
+      // });
+    });
+  }
+
+  newUploadImage(imageURI) {
+    //base64Image
+    return new Promise<any>((resolve, reject) => {
+      let storageRef = firebase.storage().ref();
+      let imageRef = storageRef
+        .child('uploads')
+        .child('images')
+        .child(`${new Date().getTime()}`);
+      this.newEncodeImageUri(imageURI, function(image64) {
+        imageRef.putString(image64, 'data_url').then(
+          snapshot => {
+            resolve(snapshot.downloadURL);
+          },
+          err => {
+            reject(err);
+          }
+        );
+      });
+    });
+
+    // const filePath = `uploads/images/${new Date().getTime()}`;
+    // const ref = this.afStorage.ref(filePath);
+    // this.task = ref.putString(base64Image, 'data_url');
+    // return this.task
+    //   .snapshotChanges()
+    //   .pipe(
+    //     finalize(() => {
+    //       ref.getDownloadURL().subscribe(url => {
+    //         return url;
+    //       });
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   /**
    * To remove selected image before uploading
    * @param img Car Image
    */
-  removeImage(img: any) {
-    const index = this.selectedImages.findIndex(item => item === img);
-    this.selectedImages.splice(index, 1);
+  removeImage(imagesArr: any[], img: any) {
+    // if (this.cameraImages && this.cameraImages.length > 0) {
+    //   const index = this.cameraImages.findIndex(item => item === img);
+    //   this.cameraImages.splice(index, 1);
+    // } else {
+    //   if (this.galleryImages && this.galleryImages.length > 0) {
+    //     const index = this.galleryImages.findIndex(item => item === img);
+    //     this.galleryImages.splice(index, 1);
+    //   }
+    // }
+    if (imagesArr && imagesArr.length > 0) {
+      const index = imagesArr.findIndex(item => item === img);
+      imagesArr.splice(index, 1);
+    }
+    // const index = this.selectedImages.findIndex(item => item === img);
+    // this.selectedImages.splice(index, 1);
     this.toastCtrl
       .create({
         position: 'bottom',
