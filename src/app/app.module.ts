@@ -10,6 +10,8 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { Camera } from '@ionic-native/camera';
 import { Network } from '@ionic-native/network';
 import { ImagePicker } from '@ionic-native/image-picker';
+import { NativeStorage } from '@ionic-native/native-storage';
+import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 
 // import { HomePage } from '../pages/home/home';
@@ -46,6 +48,7 @@ const firebaseConfig = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
     AngularFireStorageModule,
@@ -63,6 +66,7 @@ const firebaseConfig = {
     Network,
     GooglePlus,
     ImagePicker,
+    NativeStorage,
     CarAdminProvider,
     CommonProvider
   ]

@@ -19,6 +19,7 @@ import { CommonProvider } from '../../providers/common.service';
 import { CarAdminProvider } from '../../providers/car-admin.service';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -53,6 +54,7 @@ export class UploadPage implements AfterViewInit {
     public alertCtrl: AlertController,
     public camera: Camera,
     public imagePicker: ImagePicker,
+    private storage: Storage,
     public afStorage: AngularFireStorage,
     public auth: AuthProvider,
     private carService: CarAdminProvider,
@@ -74,6 +76,17 @@ export class UploadPage implements AfterViewInit {
 
   ngAfterViewInit() {
     this.carSlider.autoHeight = true;
+    this.storage.get('dealer_info').then(dealer_info => {
+      console.log(dealer_info);
+      this.dealerForm = {
+        name: dealer_info['name'],
+        showroomName: dealer_info.showroomName,
+        address: dealer_info.address,
+        city: dealer_info.city,
+        state: dealer_info.state,
+        contact_no: dealer_info.contact_no
+      };
+    });
   }
 
   ionViewCanEnter() {
@@ -136,7 +149,7 @@ export class UploadPage implements AfterViewInit {
       address: '',
       city: '',
       state: '',
-      contact_no: 0
+      contact_no: ''
       // isMobileNumberValid: true
     };
   }
@@ -148,7 +161,7 @@ export class UploadPage implements AfterViewInit {
       address: '',
       city: '',
       state: '',
-      contact_no: 0
+      contact_no: ''
     };
     this.carDetailForm = this.formBuilder.group({
       // photo: [''],
@@ -284,6 +297,19 @@ export class UploadPage implements AfterViewInit {
 
         // Uploading to db
         await this.carService.addCar(newCar);
+
+        // Storing dealer details to native storage
+        const dealer_info = {
+          name: newCar.name,
+          showroomName: newCar.showroomName,
+          address: newCar.address,
+          city: newCar.city,
+          state: newCar.state,
+          contact_no: newCar.contact_no
+        };
+        this.storage
+          .set('dealer_info', dealer_info)
+          .then(data => console.log(`Entered - ${data}`));
 
         // Reset fields
         this.stockerForm.reset();
