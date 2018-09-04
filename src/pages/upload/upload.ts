@@ -74,18 +74,38 @@ export class UploadPage implements AfterViewInit {
     };
   }
 
+  ionViewDidEnter() {
+    this.storage.ready().then(data => {
+      this.storage.get('dealer_info').then(dealer_info => {
+        console.log(dealer_info);
+        this.dealerForm = {
+          name: dealer_info['name'],
+          showroomName: dealer_info.showroomName,
+          address: dealer_info.address,
+          city: dealer_info.city,
+          state: dealer_info.state,
+          contact_no: dealer_info.contact_no
+        };
+      });
+    });
+  }
+
   ngAfterViewInit() {
     this.carSlider.autoHeight = true;
-    this.storage.get('dealer_info').then(dealer_info => {
-      console.log(dealer_info);
-      this.dealerForm = {
-        name: dealer_info['name'],
-        showroomName: dealer_info.showroomName,
-        address: dealer_info.address,
-        city: dealer_info.city,
-        state: dealer_info.state,
-        contact_no: dealer_info.contact_no
-      };
+    this.storage.ready().then(data => {
+      this.storage.get('dealer_info').then(dealer_info => {
+        console.log(dealer_info['name']);
+        if (typeof dealer_info !== 'undefined') {
+          this.dealerForm = {
+            name: dealer_info['name'],
+            showroomName: dealer_info.showroomName,
+            address: dealer_info.address,
+            city: dealer_info.city,
+            state: dealer_info.state,
+            contact_no: dealer_info.contact_no
+          };
+        }
+      });
     });
   }
 
@@ -307,9 +327,7 @@ export class UploadPage implements AfterViewInit {
           state: newCar.state,
           contact_no: newCar.contact_no
         };
-        this.storage
-          .set('dealer_info', dealer_info)
-          .then(data => console.log(`Entered - ${data}`));
+        this.storage.set('dealer_info', dealer_info); //.then(data => console.log(`Entered - ${data}`));
 
         // Reset fields
         this.stockerForm.reset();
@@ -393,6 +411,24 @@ export class UploadPage implements AfterViewInit {
    */
   private addFromMobileGallery() {
     try {
+      this.alertCtrl.create({
+        title: 'Information',
+        message: 'Maximum 4 images can be selected?',
+        buttons: [
+          // {
+          //   text: 'Disagree',
+          //   handler: () => {
+          //     console.log('Disagree clicked');
+          //   }
+          // },
+          {
+            text: 'Agree',
+            handler: () => {
+              console.log('Agree clicked');
+            }
+          }
+        ]
+      }).present();
       this.imagePicker.hasReadPermission().then(
         result => {
           if (result == false) {
@@ -401,24 +437,27 @@ export class UploadPage implements AfterViewInit {
           } else if (result == true) {
             this.imagePicker
               .getPictures({
-                maximumImagesCount: 4
+                maximumImagesCount: 4,
+                height: 400,
+                width: 400
               })
               .then(
                 results => {
-                  this.carService.carSelectedImages = [];
                   for (var i = 0; i < results.length; i++) {
                     // this.uploadImageToFirebase(results[i]);
-                    this.newUploadImage(results[i]).then(url =>
-                      this.carService.carSelectedImages.push(url)
-                    ); //carPicImages.push(url));
+                    this.newUploadImage(results[i]).then(url => {
+                      this.carService.carSelectedImages.push(url);
+                    }); //carPicImages.push(url));
                   }
-                  if (results && typeof results === 'object' && results.constructor === Array) {
+                  if (results && typeof results === 'object' && Array.isArray(results)) {
                     this.selectedImages = results;
-                    this.cameraImages = [];
+                    // this.cameraImages = [];
                     this.galleryImages = results;
                   }
                 },
-                err => console.log(err)
+                err => {
+                  console.log(err);
+                }
               );
           }
         },
@@ -455,7 +494,10 @@ export class UploadPage implements AfterViewInit {
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
         correctOrientation: true,
-        sourceType: this.camera.PictureSourceType.CAMERA
+        sourceType: this.camera.PictureSourceType.CAMERA,
+        targetWidth: 400,
+        targetHeight: 400,
+        saveToPhotoAlbum: true
         // sourceType: 0
       };
 
@@ -463,11 +505,11 @@ export class UploadPage implements AfterViewInit {
         // this.selectedImages = imageData !== null ? [imageData] : [];
         this.selectedImages = [];
         this.selectedImages.push(imageData);
-        this.galleryImages = [];
-        this.cameraImages = [];
+        // this.galleryImages = [];
+        // this.cameraImages = [];
         this.cameraImages.push(imageData);
         this.newCameraUploadImage('data:image/jpeg;base64,' + imageData).then(url => {
-          this.carService.carSelectedImages = [];
+          // this.carService.carSelectedImages = [];
           this.carService.carSelectedImages.push(url);
         });
         // this.newUploadImage(imageData).then(url => {
