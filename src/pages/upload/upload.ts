@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {
   IonicPage,
@@ -35,7 +35,14 @@ export class UploadPage implements AfterViewInit {
   percentageChanges: Observable<Number>;
   downloadURL: String;
 
-  public dealerForm: any;
+  // public dealerForm: any;
+  public dealerForm: any = {
+    showroomName: '',
+    address: '',
+    city: '',
+    state: '',
+    contact_no: ''
+  };
   public carDetailForm: FormGroup;
   public stockerForm: FormGroup;
   public regInfoForm: FormGroup;
@@ -45,6 +52,9 @@ export class UploadPage implements AfterViewInit {
   public selectedImages: any[];
   public cameraImages: any[];
   public galleryImages: any[];
+
+  users: any = [];
+  dealers: any[] = [];
 
   constructor(
     public formBuilder: FormBuilder,
@@ -64,7 +74,7 @@ export class UploadPage implements AfterViewInit {
     this.galleryImages = [];
     this.cameraImages = [];
     this.dealerForm = {
-      name: '',
+      // name: '',
       showroomName: '',
       address: '',
       city: '',
@@ -72,41 +82,68 @@ export class UploadPage implements AfterViewInit {
       contact_no: ''
       // isMobileNumberValid: true
     };
+    this.auth.getDealers();
   }
 
   ionViewDidEnter() {
-    this.storage.ready().then(data => {
-      this.storage.get('dealer_info').then(dealer_info => {
-        console.log(dealer_info);
-        this.dealerForm = {
-          name: dealer_info['name'],
-          showroomName: dealer_info.showroomName,
-          address: dealer_info.address,
-          city: dealer_info.city,
-          state: dealer_info.state,
-          contact_no: dealer_info.contact_no
-        };
-      });
-    });
+    this.dealers = this.auth.dealers;
+    if (this.auth.selectedDealer) {
+      this.dealerForm['showroomName'] = this.auth.selectedDealer['showroomName'];
+      this.dealerForm['address'] = this.auth.selectedDealer['address'];
+      this.dealerForm['city'] = this.auth.selectedDealer['city'];
+      this.dealerForm['state'] = this.auth.selectedDealer['state'];
+      this.dealerForm['contact_no'] = this.auth.selectedDealer['contact_no'];
+    }
+    console.log(this.dealers);
+
+    // this.storage.ready().then(data => {
+    //   this.storage.get('dealer_info').then(dealer_info => {
+    //     console.log(dealer_info);
+    //     this.dealerForm = {
+    //       name: dealer_info['name'],
+    //       showroomName: dealer_info.showroomName,
+    //       address: dealer_info.address,
+    //       city: dealer_info.city,
+    //       state: dealer_info.state,
+    //       contact_no: dealer_info.contact_no
+    //     };
+    //   });
+    // });
   }
 
   ngAfterViewInit() {
     this.carSlider.autoHeight = true;
-    this.storage.ready().then(data => {
-      this.storage.get('dealer_info').then(dealer_info => {
-        console.log(dealer_info['name']);
-        if (typeof dealer_info !== 'undefined') {
-          this.dealerForm = {
-            name: dealer_info['name'],
-            showroomName: dealer_info.showroomName,
-            address: dealer_info.address,
-            city: dealer_info.city,
-            state: dealer_info.state,
-            contact_no: dealer_info.contact_no
-          };
-        }
-      });
-    });
+    // this.storage.ready().then(data => {
+    //   this.storage.get('dealer_info').then(dealer_info => {
+    //     console.log(dealer_info['name']);
+    //     if (typeof dealer_info !== 'undefined') {
+    //       this.dealerForm = {
+    //         name: dealer_info['name'],
+    //         showroomName: dealer_info.showroomName,
+    //         address: dealer_info.address,
+    //         city: dealer_info.city,
+    //         state: dealer_info.state,
+    //         contact_no: dealer_info.contact_no
+    //       };
+    //     }
+    //   });
+    // });
+  }
+
+  onDealerChanged(d) {
+    console.log('ion-change:', d);
+    this.dealerForm['showroomName'] = d['showroomName'];
+    this.dealerForm['address'] = d['address'];
+    this.dealerForm['city'] = d['city'];
+    this.dealerForm['state'] = d['state'];
+    this.dealerForm['contact_no'] = d['contact_no'];
+    // this.carSlider.resize();
+    this.carSlider.autoHeight = true;
+    this.auth.selectedDealer = d;
+  }
+
+  onDealerOptionSelected(dealer) {
+    console.log(dealer['dealer_info']);
   }
 
   ionViewCanEnter() {
@@ -147,6 +184,10 @@ export class UploadPage implements AfterViewInit {
     this.tabsCtrl = this.navCtrl.parent;
     // this.carSlider.autoHeight = true;
     this.loadForm();
+    this.auth.getUsers().subscribe(users => {
+      this.users = users;
+      console.log(this.users);
+    });
   }
 
   /*public slidesHeight: string | number;
@@ -164,7 +205,7 @@ export class UploadPage implements AfterViewInit {
 
   resetDealerDetails() {
     this.dealerForm = {
-      name: '',
+      // name: '',
       showroomName: '',
       address: '',
       city: '',
@@ -176,7 +217,7 @@ export class UploadPage implements AfterViewInit {
 
   loadForm(): void {
     this.dealerForm = {
-      name: '',
+      // name: '',
       showroomName: '',
       address: '',
       city: '',
@@ -307,7 +348,7 @@ export class UploadPage implements AfterViewInit {
             ? this.carService.carSelectedImages
             : [];
         // Dealer details
-        newCar.name = this.dealerForm.name;
+        // newCar.name = this.dealerForm.name;
         newCar.showroomName = this.dealerForm.showroomName;
         newCar.address = this.dealerForm.address;
         newCar.city = this.dealerForm.city;
@@ -319,15 +360,15 @@ export class UploadPage implements AfterViewInit {
         await this.carService.addCar(newCar);
 
         // Storing dealer details to native storage
-        const dealer_info = {
-          name: newCar.name,
-          showroomName: newCar.showroomName,
-          address: newCar.address,
-          city: newCar.city,
-          state: newCar.state,
-          contact_no: newCar.contact_no
-        };
-        this.storage.set('dealer_info', dealer_info); //.then(data => console.log(`Entered - ${data}`));
+        // const dealer_info = {
+        //   name: newCar.name,
+        //   showroomName: newCar.showroomName,
+        //   address: newCar.address,
+        //   city: newCar.city,
+        //   state: newCar.state,
+        //   contact_no: newCar.contact_no
+        // };
+        // this.storage.set('dealer_info', dealer_info); //.then(data => console.log(`Entered - ${data}`));
 
         // Reset fields
         this.stockerForm.reset();
@@ -411,24 +452,26 @@ export class UploadPage implements AfterViewInit {
    */
   private addFromMobileGallery() {
     try {
-      this.alertCtrl.create({
-        title: 'Information',
-        message: 'Maximum 4 images can be selected?',
-        buttons: [
-          // {
-          //   text: 'Disagree',
-          //   handler: () => {
-          //     console.log('Disagree clicked');
-          //   }
-          // },
-          {
-            text: 'Agree',
-            handler: () => {
-              console.log('Agree clicked');
+      this.alertCtrl
+        .create({
+          title: 'Information',
+          message: 'Maximum 4 images can be selected?',
+          buttons: [
+            // {
+            //   text: 'Disagree',
+            //   handler: () => {
+            //     console.log('Disagree clicked');
+            //   }
+            // },
+            {
+              text: 'Agree',
+              handler: () => {
+                console.log('Agree clicked');
+              }
             }
-          }
-        ]
-      }).present();
+          ]
+        })
+        .present();
       this.imagePicker.hasReadPermission().then(
         result => {
           if (result == false) {

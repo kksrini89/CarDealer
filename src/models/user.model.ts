@@ -9,5 +9,13 @@ export interface User {
   name: String;
   email: String;
   roles: Roles;
-  // photoURL: String;
+  dealer_info: {
+    name: String;
+    showroomName: String;
+    address: String;
+    city: String;
+    state: String;
+    contact_no: Number;
+  };
+  photoURL: String;
 }

@@ -14,30 +14,36 @@
       <div padding>
         <ion-item-group>
           <ion-item-divider color="light">DEALER INFO</ion-item-divider>
-          <ion-item padding>
-            <ion-label floating>Dealer Name</ion-label>
-            <ion-input [(ngModel)]="dealerForm.name" type="text"></ion-input>
-          </ion-item>
-          <ion-item padding>
-            <ion-label floating>Showroom Name</ion-label>
-            <ion-input [(ngModel)]="dealerForm.showroomName" type="text"></ion-input>
-          </ion-item>
-          <ion-item padding>
-            <ion-label floating>Address</ion-label>
-            <ion-input [(ngModel)]="dealerForm.address" type="text"></ion-input>
-          </ion-item>
-          <ion-item padding>
-            <ion-label floating>City</ion-label>
-            <ion-input [(ngModel)]="dealerForm.city" type="text"></ion-input>
-          </ion-item>
-          <ion-item padding>
-            <ion-label floating>State</ion-label>
-            <ion-input [(ngModel)]="dealerForm.state" type="text"></ion-input>
-          </ion-item>
-          <ion-item padding>
-            <ion-label floating>Contact Number</ion-label>
-            <ion-input [(ngModel)]="dealerForm.contact_no" type="number"></ion-input>
-          </ion-item>
+          <div>
+            <ion-item>
+              <ion-label>Dealer Detail</ion-label>
+              <ion-select (ionChange)="onDealerChanged($event)" multiple="false">
+                <ion-option [selected]="false" *ngFor="let d of dealers" [value]="d" (ionSelect)="onDealerOptionSelected(d)">{{d['showroomName']}}</ion-option>
+              </ion-select>
+            </ion-item>
+            <!-- <div *ngIf="dealerForm"> -->
+            <ion-item padding>
+              <ion-label floating>Showroom Name</ion-label>
+              <ion-input [(ngModel)]="dealerForm.showroomName" type="text" [readonly]="true"></ion-input>
+            </ion-item>
+            <ion-item padding>
+              <ion-label floating>Address</ion-label>
+              <ion-input [(ngModel)]="dealerForm.address" type="text" [readonly]="true"></ion-input>
+            </ion-item>
+            <ion-item padding>
+              <ion-label floating>City</ion-label>
+              <ion-input [(ngModel)]="dealerForm.city" type="text" [readonly]="true"></ion-input>
+            </ion-item>
+            <ion-item padding>
+              <ion-label floating>State</ion-label>
+              <ion-input [(ngModel)]="dealerForm.state" type="text" [readonly]="true"></ion-input>
+            </ion-item>
+            <ion-item padding>
+              <ion-label floating>Contact Number</ion-label>
+              <ion-input [(ngModel)]="dealerForm.contact_no" type="number" [readonly]="true"></ion-input>
+            </ion-item>
+            <!-- </div> -->
+          </div>
           <!-- <ion-item *ngIf="!this.dealerForm.isMobileNumberValid">
               <p>Please enter a valid mobile number.</p>
             </ion-item> -->
@@ -197,8 +203,7 @@
             </ion-item> -->
             <ion-item>
               <ion-label>Stock Entry Date</ion-label>
-              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate"
-              min="2010" max="2025-12-31"></ion-datetime>
+              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate" min="2010" max="2025-12-31"></ion-datetime>
             </ion-item>
           </form>
         </ion-list>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import {
   // IonicPage,
   NavController,
@@ -6,9 +6,11 @@ import {
   LoadingController,
   ToastController
 } from 'ionic-angular';
-import { Network } from '@ionic-native/network';
 import { NativeStorage } from '@ionic-native/native-storage';
-// import * as firebase from 'firebase';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import * as firebase from 'firebase/app';
+// import { Network } from '@ionic-native/network';
+
 import { CommonProvider } from '../../providers/common.service';
 import { AuthProvider } from '../../providers/auth.service';
 
@@ -18,11 +20,13 @@ import { AuthProvider } from '../../providers/auth.service';
 })
 export class RegisterComponent {
   signUpForm: any;
+  selectedImageURI: string = '';
+  isDealerInputVisible: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    // private network: Network,
+    private camera: Camera,
     public commonservice: CommonProvider,
     public loading: LoadingController,
     private toastCtrl: ToastController,
@@ -33,7 +37,51 @@ export class RegisterComponent {
     this.signUpForm['name'] = '';
     this.signUpForm['email'] = '';
     this.signUpForm['password'] = '';
-    // this.signUpForm['emptype'] = '';
+    this.signUpForm['dealer'] = {};
+    this.signUpForm['dealer']['name'] = '';
+    this.signUpForm['dealer']['showroomName'] = '';
+    this.signUpForm['dealer']['address'] = '';
+    this.signUpForm['dealer']['city'] = '';
+    this.signUpForm['dealer']['state'] = '';
+    this.signUpForm['dealer']['contact_no'] = '';
+    this.signUpForm['photoURL'] = '';
+  }
+
+  onDealerNameChanged(event: any) {
+    console.log(event);
+    const inputVal = event.target.value;
+    this.isDealerInputVisible = inputVal !== '' ? true : false;
+  }
+
+  uploadPhoto() {
+    try {
+      const options: CameraOptions = {
+        correctOrientation: true,
+        mediaType: this.camera.MediaType.PICTURE,
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.JPEG,
+        quality: 33
+      };
+
+      this.camera.getPicture(options).then(img => {
+        console.log(img);
+        this.selectedImageURI = `data:image/jpeg;base64,${img}`; // for displaying purpose
+        this.signUpForm['photoURL'] = this.selectedImageURI; // for storing/retrieving from db
+        // let filePathWithQueryString = img;
+        // const imagePath = filePathWithQueryString.split('?')[0];
+        // const pathSegments = imagePath.split('/');
+        // const imageName = pathSegments[pathSegments.length - 1];
+        // this.signUpForm['photoURL'] = imageName;
+        // this.selectedImageURI = imagePath;
+        // this.commonservice.newUploadImage('data:image/jpeg;base64,' + img).then(img_url => {
+        //   this.signUpForm['photoURL'] = img_url;
+        //   // loading.dismiss();
+        // });
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   signUp() {
@@ -65,7 +113,20 @@ export class RegisterComponent {
       this.authService
         .signUp(credentials)
         .then(async user => {
-          await this.authService.updateUserData({ ...user, name: this.signUpForm.name });
+          let dealer_info = {
+            name: this.signUpForm['dealer']['name'],
+            showroomName: this.signUpForm['dealer']['showroomName'],
+            address: this.signUpForm['dealer']['address'],
+            city: this.signUpForm['dealer']['city'],
+            state: this.signUpForm['dealer']['state'],
+            contact_no: this.signUpForm['dealer']['contact_no']
+          };
+          await this.authService.updateUserData({
+            ...user,
+            name: this.signUpForm.name,
+            dealer_info: dealer_info,
+            photoURL: this.signUpForm.photoURL ? this.signUpForm.photoURL : ''
+          });
           this.nativeStorage.setItem('userDetails', this.signUpForm);
           console.warn('i entered successfully');
           console.warn(user);
@@ -76,6 +137,7 @@ export class RegisterComponent {
             position: 'bottom'
           });
           toast.present();
+          this.isDealerInputVisible = false;
           this.authService.getUserProfile(user).then((user: any) => {
             if (user) {
               if (user.roles.admin || user.roles.editor) {

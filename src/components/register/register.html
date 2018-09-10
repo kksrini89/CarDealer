@@ -23,6 +23,40 @@
       <ion-label floating>Password</ion-label>
       <ion-input type="password" [(ngModel)]="signUpForm.password"></ion-input>
     </ion-item>
+    <div *ngIf="signUpForm['dealer']">
+      <ion-item>
+        <ion-label floating>Dealer Name</ion-label>
+        <ion-input type="text" [(ngModel)]="signUpForm.dealer.name" (input)="onDealerNameChanged($event)"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="isDealerInputVisible">
+        <ion-label floating>Show Room Name</ion-label>
+        <ion-input type="text" [(ngModel)]="signUpForm.dealer.showroomName"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="isDealerInputVisible">
+        <ion-label floating>Dealer Address</ion-label>
+        <ion-input type="text" [(ngModel)]="signUpForm.dealer.address"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="isDealerInputVisible">
+        <ion-label floating>Dealer City</ion-label>
+        <ion-input type="text" [(ngModel)]="signUpForm.dealer.city"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="isDealerInputVisible">
+        <ion-label floating>Dealer State</ion-label>
+        <ion-input type="text" [(ngModel)]="signUpForm.dealer.state"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="isDealerInputVisible">
+        <ion-label floating>Dealer Mobile No</ion-label>
+        <ion-input type="tel" [(ngModel)]="signUpForm.dealer.contact_no"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item>
+      <!-- <ion-input [disabled]="true" type="text" placeholder="Profile photo" [(ngModel)]="signUpForm.photoURL"></ion-input> -->
+      <ion-img *ngIf="selectedImageURI!=''" [alt]="'ProfileImage'" [height]="200" [width]="200" [src]="selectedImageURI"></ion-img>
+      <button ion-button large clear (click)="uploadPhoto()" item-end>
+        <ion-icon name="cloud-upload"></ion-icon>
+      </button>
+    </ion-item>
+    <!-- <ion-item-divider></ion-item-divider> -->
   </ion-list>
   <div padding>
     <button block ion-button (click)="signUp()">Register</button>

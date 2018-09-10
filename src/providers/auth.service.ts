@@ -16,6 +16,8 @@ import { switchMap, first } from 'rxjs/operators';
 export class AuthProvider {
   user$: Observable<User>;
   userProfile: any = null;
+  dealers: any[] = [];
+  selectedDealer: any;
   constructor(
     private platform: Platform,
     // private http: HttpClient,
@@ -30,6 +32,7 @@ export class AuthProvider {
     //     this.userProfile = null;
     //   }
     // });
+    this.selectedDealer = {};
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
@@ -188,18 +191,63 @@ export class AuthProvider {
     }
   }
 
+  getUsers() {
+    try {
+      return this.afs.collection('users').valueChanges();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getDealers() {
+    this.getUsers().subscribe(data => {
+      const users = data;
+      let authUsers = users.filter(user => {
+        if (user['roles']) {
+          let isAuthorized = user['roles']['editor'] || user['roles']['admin'];
+          if (isAuthorized) {
+            //this.dealers.push(user['dealer_info']);
+            return user;
+          }
+        }
+      });
+      this.dealers = authUsers.map(a => {
+        if (a && a['dealer_info']) {
+          return a['dealer_info'];
+        }
+      });
+    });
+  }
+
   public async updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-    const data: User = {
+    let data: User = {
       name: user.name,
       uid: user.uid,
       email: user.email,
       roles: {
         subscriber: true
-      }
-      // photoURL: user.photoURL || 'https://goo.gl/7kz9qG'
+      },
+      dealer_info: {
+        name: user.dealer_info.name, //['dealerForm.name'],
+        showroomName: user.dealer_info.showroomName,
+        address: user.dealer_info.address,
+        city: user.dealer_info.city,
+        state: user.dealer_info.state,
+        contact_no: user.dealer_info.contact_no
+      },
+      photoURL: user.photoURL || 'https://goo.gl/7kz9qG'
     };
+    // const data: User = {
+    //   name: user.name,
+    //   uid: user.uid,
+    //   email: user.email,
+    //   roles: {
+    //     subscriber: true
+    //   },
+    //   photoURL: user.photoURL || 'https://goo.gl/7kz9qG'
+    // };
     return await userRef.set(data, { merge: true });
   }
 

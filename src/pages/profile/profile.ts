@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { AuthProvider } from '../../providers/auth.service';
-import { LoginPage } from '../login/login';
-import { User } from '../../models/user.model';
-import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
+import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
+import { LoginPage } from '../login/login';
+
+import { User } from '../../models/user.model';
+import { AuthProvider } from '../../providers/auth.service';
 
 @IonicPage()
 @Component({
