@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {
   IonicPage,
@@ -41,7 +41,8 @@ export class UploadPage implements AfterViewInit {
     address: '',
     city: '',
     state: '',
-    contact_no: ''
+    contact_no: '',
+    profile_image: ''
   };
   public carDetailForm: FormGroup;
   public stockerForm: FormGroup;
@@ -79,7 +80,8 @@ export class UploadPage implements AfterViewInit {
       address: '',
       city: '',
       state: '',
-      contact_no: ''
+      contact_no: '',
+      profile_image: ''
       // isMobileNumberValid: true
     };
     this.auth.getDealers();
@@ -93,6 +95,7 @@ export class UploadPage implements AfterViewInit {
       this.dealerForm['city'] = this.auth.selectedDealer['city'];
       this.dealerForm['state'] = this.auth.selectedDealer['state'];
       this.dealerForm['contact_no'] = this.auth.selectedDealer['contact_no'];
+      this.dealerForm['profile_image'] = this.auth.selectedDealer['profile_image'];
     }
     console.log(this.dealers);
 
@@ -137,6 +140,7 @@ export class UploadPage implements AfterViewInit {
     this.dealerForm['city'] = d['city'];
     this.dealerForm['state'] = d['state'];
     this.dealerForm['contact_no'] = d['contact_no'];
+    this.dealerForm['profile_image'] = d['profile_image'];
     // this.carSlider.resize();
     this.carSlider.autoHeight = true;
     this.auth.selectedDealer = d;
@@ -222,7 +226,8 @@ export class UploadPage implements AfterViewInit {
       address: '',
       city: '',
       state: '',
-      contact_no: ''
+      contact_no: '',
+      profile_image: ''
     };
     this.carDetailForm = this.formBuilder.group({
       // photo: [''],
@@ -354,6 +359,7 @@ export class UploadPage implements AfterViewInit {
         newCar.city = this.dealerForm.city;
         newCar.state = this.dealerForm.state;
         newCar.contact_no = this.dealerForm.contact_no;
+        newCar.profile_image = this.dealerForm.profile_image;
         console.log(newCar);
 
         // Uploading to db

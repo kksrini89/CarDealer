@@ -44,6 +44,7 @@ export class RegisterComponent {
     this.signUpForm['dealer']['city'] = '';
     this.signUpForm['dealer']['state'] = '';
     this.signUpForm['dealer']['contact_no'] = '';
+    this.signUpForm['dealer']['profile_image'] = '';
     this.signUpForm['photoURL'] = '';
   }
 
@@ -51,6 +52,26 @@ export class RegisterComponent {
     console.log(event);
     const inputVal = event.target.value;
     this.isDealerInputVisible = inputVal !== '' ? true : false;
+  }
+
+  uploadDealerProfileImage() {
+    try {
+      const options: CameraOptions = {
+        correctOrientation: true,
+        mediaType: this.camera.MediaType.PICTURE,
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.JPEG,
+        quality: 33
+      };
+
+      this.camera.getPicture(options).then(img => {
+        console.log(img);
+        this.signUpForm['dealer']['profile_image'] = `data:image/jpeg;base64,${img}`;
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   uploadPhoto() {
@@ -119,7 +140,8 @@ export class RegisterComponent {
             address: this.signUpForm['dealer']['address'],
             city: this.signUpForm['dealer']['city'],
             state: this.signUpForm['dealer']['state'],
-            contact_no: this.signUpForm['dealer']['contact_no']
+            contact_no: this.signUpForm['dealer']['contact_no'],
+            profile_image: this.signUpForm['dealer']['profile_image']
           };
           await this.authService.updateUserData({
             ...user,

@@ -35,7 +35,10 @@
         <ion-col>{{selectedCar.dealer_info.name}}</ion-col>
       </ion-row> -->
       <ion-row padding>
-        <ion-col>Showroom Name: </ion-col>
+        <!-- <ion-col>Showroom Name: </ion-col> -->
+        <ion-col>
+          <ion-img *ngIf="selectedCar.profile_image!=''" [alt]="'DealerImage'" [height]="100" [width]="100" [src]="selectedCar.profile_image"></ion-img>
+        </ion-col>
         <ion-col>{{selectedCar.showroomName}}</ion-col>
       </ion-row>
       <ion-row padding>

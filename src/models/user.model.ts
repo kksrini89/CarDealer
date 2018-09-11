@@ -16,6 +16,7 @@ export interface User {
     city: String;
     state: String;
     contact_no: Number;
+    profile_image: String;
   };
   photoURL: String;
 }

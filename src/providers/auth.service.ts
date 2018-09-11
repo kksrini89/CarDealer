@@ -235,7 +235,8 @@ export class AuthProvider {
         address: user.dealer_info.address,
         city: user.dealer_info.city,
         state: user.dealer_info.state,
-        contact_no: user.dealer_info.contact_no
+        contact_no: user.dealer_info.contact_no,
+        profile_image: user.dealer_info.profile_image
       },
       photoURL: user.photoURL || 'https://goo.gl/7kz9qG'
     };
