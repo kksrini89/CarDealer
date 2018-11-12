@@ -20,7 +20,7 @@
     <ion-card *ngFor="let item of carList">
       <ion-slides autoplay="2500" loop="true" pager="true" paginationType="bullets" *ngIf="item.photo && item.photo.length >1">
         <ion-slide *ngFor="let item of item.photo">
-          <img src="{{item}}" alt="car image"/>
+          <img src="{{item}}" alt="car image" />
         </ion-slide>
       </ion-slides>
       <img *ngIf="item.photo && item.photo.length ==0" style="height: 200px" src="assets/imgs/no-img.png" />
@@ -37,7 +37,12 @@
       <ion-item>
         <button ion-button icon-start clear item-start (click)="deleteItem(item)" *ngIf="(user?.roles.admin) || (user?.uid === item?.createdBy?.uid)">
           <ion-icon name="trash"></ion-icon>
-          Delete</button>
+          Delete
+        </button>
+        <button ion-button clear icon-start item-center (click)="editItem(item)" *ngIf="(user?.roles.admin) || (user?.uid === item?.createdBy?.uid)">
+          <ion-icon name="open"></ion-icon>
+          Edit
+        </button>
         <button ion-button icon-start clear item-end (click)="getDetail(item)">
           <ion-icon name="navigate"></ion-icon>
           More
@@ -45,6 +50,6 @@
       </ion-item>
     </ion-card>
 
-    <br/>
+    <br />
   </div>
 </ion-content>

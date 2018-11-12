@@ -4,8 +4,11 @@ import {
   NavController,
   ToastController,
   NavParams,
-  AlertController
+  AlertController,
+  Tabs
 } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { Observable } from 'rxjs';
 
 import { CarAdminProvider } from '../../providers/car-admin.service';
@@ -19,29 +22,34 @@ import { User } from '../../models/user.model';
   templateUrl: 'display.html'
 })
 export class DisplayPage {
+  tabsCtrl: Tabs;
   searchInput: string = '';
 
   user: User;
   carDealsList$: Observable<any[]>;
   carList: any[];
+  isEditModeEnabled: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public navParams: NavParams,
+    public storage: Storage,
+    public nStorage: NativeStorage,
     public authService: AuthProvider,
     public carProvider: CarAdminProvider
   ) {}
 
   ionViewWillEnter() {
+    console.log(this.isEditModeEnabled);
     this.carDealsList$ = this.carProvider.getCars();
     this.authService.getCurrentUser().then(res => (this.user = res));
     this.carDealsList$.subscribe(items => (this.carList = items));
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DisplayPage');
+    // console.log('ionViewDidLoad DisplayPage');
   }
 
   OnInput(event: any) {
@@ -71,6 +79,42 @@ export class DisplayPage {
 
   getDetail(car: Car) {
     this.navCtrl.push('CarDetailPage', { 'selected-car': JSON.stringify(car) });
+  }
+
+  public selectedCar: string = '';
+  async editItem(car: any) {
+    console.log(car);
+    // this.carProvider.selectedCar = car;
+    const stringifyCar = JSON.stringify(car);
+    this.selectedCar = stringifyCar;
+    // const storageKey = this.carProvider.getEditedCarStorageKey();
+    await this.storage.remove('edited-car');
+    await this.storage.set('edited-car', stringifyCar);
+    // this.nStorage.setItem(storageKey, stringifyCar).then(val => console.log('Stored edited-car'));
+    this.carProvider.setSelectedCar(car);
+    this.isEditModeEnabled = true;
+    this.tabsCtrl = this.navCtrl.parent;
+    this.tabsCtrl.select(0); //.then(x=> console.log('transitioned from display page to upload page'));
+  }
+
+  ionViewWillLeave() {
+    console.log(this.isEditModeEnabled);
+    this.storage
+      .set('edited-car', this.selectedCar)
+      .then(val => console.log('Set selectedCar value'));
+    // if (!this.isEditModeEnabled) {
+    //   const storageKey: string = this.carProvider.getEditedCarStorageKey();
+    //   this.storage.get(storageKey).then(async val => {
+    //     if (val && val != '') {
+    //       await this.storage.remove(storageKey);
+    //       // .then(val => console.log('In Non Edit Mode - edited-car storage key is removed'));
+    //     }
+    //   });
+    // }
+  }
+
+  ionViewDidLeave() {
+    this.isEditModeEnabled = false;
   }
 
   async deleteItem(car: any) {

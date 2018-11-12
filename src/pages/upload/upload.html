@@ -17,8 +17,8 @@
           <div>
             <ion-item>
               <ion-label>Dealer Detail</ion-label>
-              <ion-select (ionChange)="onDealerChanged($event)" multiple="false">
-                <ion-option [selected]="false" *ngFor="let d of dealers" [value]="d" (ionSelect)="onDealerOptionSelected(d)">{{d['showroomName']}}</ion-option>
+              <ion-select (ionChange)="onDealerChanged($event)" multiple="false" [(ngModel)]="dealerForm">
+                <ion-option *ngFor="let d of dealers" [value]="d" (ionSelect)="onDealerOptionSelected(d)">{{d['showroomName']}}</ion-option>
               </ion-select>
             </ion-item>
             <!-- <div *ngIf="dealerForm"> -->
@@ -108,6 +108,17 @@
         </div>
         <div padding>
           <ion-grid>
+            <ion-row *ngIf="editedCarImages && editedCarImages.length > 0">
+              <ion-col *ngFor="let img of editedCarImages">
+                <div class="img-item">
+                  <!-- <img src="{{'data:image/jpg;base64,' + image}}" alt="album"> -->
+                  <img src="{{img}}" alt="album">
+                  <span class="remove-button-icon" (click)="removeImage(editedCarImages, img)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </ion-col>
+            </ion-row>
             <ion-row *ngIf="galleryImages && galleryImages.length > 0">
               <ion-col *ngFor="let image of galleryImages">
                 <div class="img-item">
@@ -203,12 +214,14 @@
             </ion-item> -->
             <ion-item>
               <ion-label>Stock Entry Date</ion-label>
-              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate" min="2010" max="2025-12-31"></ion-datetime>
+              <ion-datetime displayFormat="MMM/YYYY" pickerFormat="MMM/YYYY" formControlName="stockEntryDate" min="2010"
+                max="2025"></ion-datetime>
             </ion-item>
           </form>
         </ion-list>
       </div>
-      <button padding ion-button color="primary" (click)="save()">Upload</button>
+      <button *ngIf="mode!=='edit'" padding ion-button color="primary" (click)="save()">Upload</button>
+      <button *ngIf="mode==='edit'" padding ion-button color="primary" (click)="save('edit')">Update</button>
     </ion-slide>
 
   </ion-slides>

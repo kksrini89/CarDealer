@@ -13,13 +13,14 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ImagePicker } from '@ionic-native/image-picker';
 import * as firebase from 'firebase/app';
 import { AngularFireUploadTask, AngularFireStorage } from 'angularfire2/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import { AuthProvider } from '../../providers/auth.service';
 import { CommonProvider } from '../../providers/common.service';
 import { CarAdminProvider } from '../../providers/car-admin.service';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -53,6 +54,9 @@ export class UploadPage implements AfterViewInit {
   public selectedImages: any[];
   public cameraImages: any[];
   public galleryImages: any[];
+  public selectedCarInEdit: any;
+  public editedCarImages: String[] = [];
+  public mode: string = '';
 
   users: any = [];
   dealers: any[] = [];
@@ -66,9 +70,10 @@ export class UploadPage implements AfterViewInit {
     public camera: Camera,
     public imagePicker: ImagePicker,
     private storage: Storage,
+    private nStorage: NativeStorage,
     public afStorage: AngularFireStorage,
     public auth: AuthProvider,
-    private carService: CarAdminProvider,
+    public carService: CarAdminProvider,
     private commonService: CommonProvider
   ) {
     this.selectedImages = [];
@@ -85,69 +90,11 @@ export class UploadPage implements AfterViewInit {
       // isMobileNumberValid: true
     };
     this.auth.getDealers();
-  }
-
-  ionViewDidEnter() {
-    this.dealers = this.auth.dealers;
-    if (this.auth.selectedDealer) {
-      this.dealerForm['showroomName'] = this.auth.selectedDealer['showroomName'];
-      this.dealerForm['address'] = this.auth.selectedDealer['address'];
-      this.dealerForm['city'] = this.auth.selectedDealer['city'];
-      this.dealerForm['state'] = this.auth.selectedDealer['state'];
-      this.dealerForm['contact_no'] = this.auth.selectedDealer['contact_no'];
-      this.dealerForm['profile_image'] = this.auth.selectedDealer['profile_image'];
-    }
-    console.log(this.dealers);
-
-    // this.storage.ready().then(data => {
-    //   this.storage.get('dealer_info').then(dealer_info => {
-    //     console.log(dealer_info);
-    //     this.dealerForm = {
-    //       name: dealer_info['name'],
-    //       showroomName: dealer_info.showroomName,
-    //       address: dealer_info.address,
-    //       city: dealer_info.city,
-    //       state: dealer_info.state,
-    //       contact_no: dealer_info.contact_no
-    //     };
-    //   });
-    // });
-  }
-
-  ngAfterViewInit() {
-    this.carSlider.autoHeight = true;
-    // this.storage.ready().then(data => {
-    //   this.storage.get('dealer_info').then(dealer_info => {
-    //     console.log(dealer_info['name']);
-    //     if (typeof dealer_info !== 'undefined') {
-    //       this.dealerForm = {
-    //         name: dealer_info['name'],
-    //         showroomName: dealer_info.showroomName,
-    //         address: dealer_info.address,
-    //         city: dealer_info.city,
-    //         state: dealer_info.state,
-    //         contact_no: dealer_info.contact_no
-    //       };
-    //     }
-    //   });
-    // });
-  }
-
-  onDealerChanged(d) {
-    console.log('ion-change:', d);
-    this.dealerForm['showroomName'] = d['showroomName'];
-    this.dealerForm['address'] = d['address'];
-    this.dealerForm['city'] = d['city'];
-    this.dealerForm['state'] = d['state'];
-    this.dealerForm['contact_no'] = d['contact_no'];
-    this.dealerForm['profile_image'] = d['profile_image'];
-    // this.carSlider.resize();
-    this.carSlider.autoHeight = true;
-    this.auth.selectedDealer = d;
-  }
-
-  onDealerOptionSelected(dealer) {
-    console.log(dealer['dealer_info']);
+    // console.log(this.carService.selectedCar)
+    // if (this.carService.selectedCar) {
+    //   const { state, city, showroomName, address, contact_no } = this.carService.selectedCar;
+    //   this.auth.selectedDealer = { state, city, showroomName, address, contact_no };
+    // }
   }
 
   ionViewCanEnter() {
@@ -192,6 +139,206 @@ export class UploadPage implements AfterViewInit {
       this.users = users;
       console.log(this.users);
     });
+    // this.storage.get('edited-car').then(val => {
+    //   if (val != '' && val !== null) {
+    //     this.selectedCarInEdit = JSON.parse(val);
+    //     console.log(this.selectedCarInEdit);
+    //   }
+    // });
+    // const storageKey = this.carService.getEditedCarStorageKey();
+    // this.nStorage.getItem(storageKey).then(val => {
+    //   this.selectedCarInEdit = JSON.parse(val);
+    //   console.log('After assigning edited car - ', this.selectedCarInEdit);
+    // });
+  }
+
+  ionViewWillLeave() {
+    // this.selectedCarInEdit = null;
+    // this.nStorage
+    //   .remove(this.carService.getEditedCarStorageKey())
+    //   .then(val => console.log('edited-car key is removed'));
+    this.mode = '';
+    this.storage
+      .remove('edited-car')
+      .then(val => console.log('edited-car key is removed from storage!'));
+  }
+
+  async ionViewDidEnter() {
+    this.dealers = this.auth.dealers;
+    // this.selectedCarInEdit = this.carService.getSelectedCar();
+    // this.storage.get('edited-car').then(val => {
+    const val = await this.storage.get('edited-car');
+      if (val !== '' && val !== undefined && val !== null) {
+        console.log(val);
+        this.selectedCarInEdit = JSON.parse(val);
+        this.mode = 'edit';
+        console.log(this.selectedCarInEdit + '-' + this.mode);
+      }
+    // });
+    // console.log(this.selectedCarInEdit);
+    if (this.selectedCarInEdit) {
+      const {
+        state,
+        city,
+        showroomName,
+        address,
+        contact_no,
+        profile_image,
+        photo
+      } = this.selectedCarInEdit;
+      this.auth.selectedDealer = { state, city, showroomName, address, contact_no, profile_image };
+      this.editedCarImages = photo;
+      // if (this.selectedCarInEdit) {
+      // const editedCar: any = this.carService.selectedCar;
+      this.assignValuesInEditMode(this.selectedCarInEdit);
+      // }
+    }
+    if (this.auth.selectedDealer) {
+      this.dealerForm['showroomName'] = this.auth.selectedDealer['showroomName'];
+      this.dealerForm['address'] = this.auth.selectedDealer['address'];
+      this.dealerForm['city'] = this.auth.selectedDealer['city'];
+      this.dealerForm['state'] = this.auth.selectedDealer['state'];
+      this.dealerForm['contact_no'] = this.auth.selectedDealer['contact_no'];
+      this.dealerForm['profile_image'] = this.auth.selectedDealer['profile_image'];
+    }
+    console.log(this.dealers);
+    // this.storage.ready().then(data => {
+    //   this.storage.get('dealer_info').then(dealer_info => {
+    //     console.log(dealer_info);
+    //     this.dealerForm = {
+    //       name: dealer_info['name'],
+    //       showroomName: dealer_info.showroomName,
+    //       address: dealer_info.address,
+    //       city: dealer_info.city,
+    //       state: dealer_info.state,
+    //       contact_no: dealer_info.contact_no
+    //     };
+    //   });
+    // });
+  }
+
+  assignValuesInEditMode(editedCar: any): void {
+    // CarDetailForm
+    if (typeof editedCar.mileage !== 'undefined') {
+      this.carDetailForm.get('mileage').setValue(editedCar.mileage);
+    }
+    if (typeof editedCar.duration !== 'undefined') {
+      this.carDetailForm.get('duration').setValue(editedCar.duration);
+    }
+    if (typeof editedCar.description !== 'undefined') {
+      this.carDetailForm.get('description').setValue(editedCar.description);
+    }
+    if (typeof editedCar.isCarAccidental !== 'undefined') {
+      this.carDetailForm.get('isCarAccidental').setValue(editedCar.isCarAccidental);
+    }
+    if (typeof editedCar.isCarCertified !== 'undefined') {
+      this.carDetailForm.get('isCarCertified').setValue(editedCar.isCarCertified);
+    }
+    if (typeof editedCar.isCarFloodAffected !== 'undefined') {
+      this.carDetailForm.get('isCarFloodAffected').setValue(editedCar.isCarFloodAffected);
+    }
+    if (typeof editedCar.stockEntryDate !== 'undefined') {
+      this.carDetailForm.get('stockEntryDate').setValue(editedCar.stockEntryDate);
+    }
+
+    // stockerForm
+    if (typeof editedCar.make !== 'undefined') {
+      this.stockerForm.get('cMake').setValue(editedCar.make);
+    }
+    if (typeof editedCar.model !== 'undefined') {
+      this.stockerForm.get('cModel').setValue(editedCar.model);
+    }
+    if (typeof editedCar.varriant !== 'undefined') {
+      this.stockerForm.get('cVarriant').setValue(editedCar.varriant);
+    }
+    if (typeof editedCar.make_year !== 'undefined') {
+      this.stockerForm.get('cMake_year').setValue(editedCar.make_year);
+    }
+    if (typeof editedCar.number_of_owners !== 'undefined') {
+      this.stockerForm.get('cNumber_of_owners').setValue(editedCar.number_of_owners);
+    }
+    if (typeof editedCar.kms_driven !== 'undefined') {
+      this.stockerForm.get('cKms_driven').setValue(editedCar.kms_driven);
+    }
+    if (typeof editedCar.transmission_type !== 'undefined') {
+      this.stockerForm.get('cTransmission_type').setValue(editedCar.transmission_type);
+    }
+    if (typeof editedCar.fuel_type !== 'undefined') {
+      this.stockerForm.get('cFuel_type').setValue(editedCar.fuel_type);
+    }
+    if (typeof editedCar.condition !== 'undefined') {
+      this.stockerForm.get('cCondition').setValue(editedCar.condition);
+    }
+    if (typeof editedCar.color !== 'undefined') {
+      this.stockerForm.get('cColor').setValue(editedCar.color);
+    }
+    if (typeof editedCar.vehicle_type !== 'undefined') {
+      this.stockerForm.get('cVehicle_type').setValue(editedCar.vehicle_type);
+    }
+    if (typeof editedCar.inspection_valid_until !== 'undefined') {
+      this.stockerForm.get('cInspection_valid_until').setValue(editedCar.inspection_valid_until);
+    }
+
+    // regInfoForm
+    if (typeof editedCar.registrationPlace !== 'undefined') {
+      this.regInfoForm.get('registrationPlace').setValue(editedCar.registrationPlace);
+    }
+    if (typeof editedCar.insurance_type !== 'undefined') {
+      this.regInfoForm.get('insurance_type').setValue(editedCar.insurance_type);
+    }
+    if (typeof editedCar.insurance_year !== 'undefined') {
+      this.regInfoForm.get('insurance_year').setValue(editedCar.insurance_year);
+    }
+
+    // priceForm
+    if (typeof editedCar.amount !== 'undefined') {
+      this.priceForm.get('amount').setValue(editedCar.amount);
+    }
+    if (typeof editedCar.isFixed !== 'undefined') {
+      this.priceForm.get('isFixed').setValue(editedCar.isFixed);
+    }
+    if (typeof editedCar.isExchangeAccepted !== 'undefined') {
+      this.priceForm.get('isExchangeAccepted').setValue(editedCar.isExchangeAccepted);
+    }
+    if (typeof editedCar.warranty !== 'undefined') {
+      this.priceForm.get('warranty').setValue(editedCar.warranty);
+    }
+  }
+
+  ngAfterViewInit() {
+    this.carSlider.autoHeight = true;
+    // this.storage.ready().then(data => {
+    //   this.storage.get('dealer_info').then(dealer_info => {
+    //     console.log(dealer_info['name']);
+    //     if (typeof dealer_info !== 'undefined') {
+    //       this.dealerForm = {
+    //         name: dealer_info['name'],
+    //         showroomName: dealer_info.showroomName,
+    //         address: dealer_info.address,
+    //         city: dealer_info.city,
+    //         state: dealer_info.state,
+    //         contact_no: dealer_info.contact_no
+    //       };
+    //     }
+    //   });
+    // });
+  }
+
+  onDealerChanged(d) {
+    console.log('ion-change:', d);
+    this.dealerForm['showroomName'] = d['showroomName'];
+    this.dealerForm['address'] = d['address'];
+    this.dealerForm['city'] = d['city'];
+    this.dealerForm['state'] = d['state'];
+    this.dealerForm['contact_no'] = d['contact_no'];
+    this.dealerForm['profile_image'] = d['profile_image'];
+    // this.carSlider.resize();
+    this.carSlider.autoHeight = true;
+    this.auth.selectedDealer = d;
+  }
+
+  onDealerOptionSelected(dealer) {
+    console.log(dealer['dealer_info']);
   }
 
   /*public slidesHeight: string | number;
@@ -283,7 +430,7 @@ export class UploadPage implements AfterViewInit {
   //   }
   // }
 
-  async save() {
+  async save(mode: string) {
     this.submitAttempt = true;
     this.loading = this.loadingCtrl.create({
       // spinner: 'hide',
@@ -334,11 +481,15 @@ export class UploadPage implements AfterViewInit {
           warranty: this.priceForm.get('warranty').value,
           duration: this.carDetailForm.get('duration').value,
           mileage: this.carDetailForm.get('mileage').value,
-          description: this.carDetailForm.get('description').value
+          description: this.carDetailForm.get('description').value,
+          stockEntryDate: this.carDetailForm.get('stockEntryDate').value,
+          isCarAccidental: this.carDetailForm.get('isCarAccidental').value,
+          isCarCertified: this.carDetailForm.get('isCarCertified').value,
+          isCarFloodAffected: this.carDetailForm.get('isCarFloodAffected').value
         };
-        newCar.isCarAccidental = this.carDetailForm.get('isCarAccidental').value;
-        newCar.isCarCertified = this.carDetailForm.get('isCarCertified').value;
-        newCar.isCarFloodAffected = this.carDetailForm.get('isCarFloodAffected').value;
+        // newCar.isCarAccidental = this.carDetailForm.get('isCarAccidental').value;
+        // newCar.isCarCertified = this.carDetailForm.get('isCarCertified').value;
+        // newCar.isCarFloodAffected = this.carDetailForm.get('isCarFloodAffected').value;
         let user = await this.auth.getCurrentUser();
         newCar.createdBy = await this.auth.getUserProfile(user);
         newCar.createdDate = Date.now();
@@ -359,11 +510,17 @@ export class UploadPage implements AfterViewInit {
         newCar.city = this.dealerForm.city;
         newCar.state = this.dealerForm.state;
         newCar.contact_no = this.dealerForm.contact_no;
-        newCar.profile_image = this.dealerForm.profile_image;
+        newCar.profile_image = this.dealerForm.profile_image || '';
         console.log(newCar);
 
         // Uploading to db
-        await this.carService.addCar(newCar);
+        if (mode === 'edit') {
+          newCar.photo =
+            this.editedCarImages && this.editedCarImages.length > 0 ? this.editedCarImages : [];
+          await this.carService.updateCar(this.selectedCarInEdit.id, newCar);
+        } else {
+          await this.carService.addCar(newCar);
+        }
 
         // Storing dealer details to native storage
         // const dealer_info = {
@@ -382,11 +539,13 @@ export class UploadPage implements AfterViewInit {
         this.regInfoForm.reset();
         this.carDetailForm.reset();
         // this.resetDealerDetails();
+        this.editedCarImages = [];
         this.selectedImages = [];
         this.galleryImages = [];
         this.cameraImages = [];
         this.carService.carSelectedImages = [];
         this.submitAttempt = false;
+        await this.storage.remove('edited-car');
       }
       this.loading.dismiss();
       // this.navCtrl.push('DisplayPage');
