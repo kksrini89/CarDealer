@@ -12,47 +12,6 @@
 
     <ion-slide>
       <div padding>
-        <ion-item-group>
-          <ion-item-divider color="light">DEALER INFO</ion-item-divider>
-          <div>
-            <ion-item>
-              <ion-label>Dealer Detail</ion-label>
-              <ion-select (ionChange)="onDealerChanged($event)" multiple="false" [(ngModel)]="dealerForm">
-                <ion-option *ngFor="let d of dealers" [value]="d" (ionSelect)="onDealerOptionSelected(d)">{{d['showroomName']}}</ion-option>
-              </ion-select>
-            </ion-item>
-            <!-- <div *ngIf="dealerForm"> -->
-            <ion-item padding>
-              <ion-label floating>Showroom Name</ion-label>
-              <ion-input [(ngModel)]="dealerForm.showroomName" type="text" [readonly]="true"></ion-input>
-            </ion-item>
-            <ion-item padding>
-              <ion-label floating>Address</ion-label>
-              <ion-input [(ngModel)]="dealerForm.address" type="text" [readonly]="true"></ion-input>
-            </ion-item>
-            <ion-item padding>
-              <ion-label floating>City</ion-label>
-              <ion-input [(ngModel)]="dealerForm.city" type="text" [readonly]="true"></ion-input>
-            </ion-item>
-            <ion-item padding>
-              <ion-label floating>State</ion-label>
-              <ion-input [(ngModel)]="dealerForm.state" type="text" [readonly]="true"></ion-input>
-            </ion-item>
-            <ion-item padding>
-              <ion-label floating>Contact Number</ion-label>
-              <ion-input [(ngModel)]="dealerForm.contact_no" type="number" [readonly]="true"></ion-input>
-            </ion-item>
-            <!-- </div> -->
-          </div>
-          <!-- <ion-item *ngIf="!this.dealerForm.isMobileNumberValid">
-              <p>Please enter a valid mobile number.</p>
-            </ion-item> -->
-        </ion-item-group>
-      </div>
-    </ion-slide>
-
-    <ion-slide>
-      <div padding>
         <p style="font-family:open-sans; font-size:14px; color: #d3c719fa">Please fill the
           <b>Car</b> details.</p>
 
@@ -133,7 +92,7 @@
             <ion-row *ngIf="cameraImages && cameraImages.length > 0">
               <ion-col *ngFor="let image of cameraImages">
                 <div class="img-item">
-                  <img src="{{'data:image/jpg;base64,' + image}}" alt="album">
+                  <img src="{{image}}" alt="album">
                   <!-- <img src="{{image}}" alt="album"> -->
                   <span class="remove-button-icon" (click)="removeImage(cameraImages, image)">
                     <i class="fa fa-times" aria-hidden="true"></i>

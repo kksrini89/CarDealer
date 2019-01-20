@@ -8,6 +8,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { HttpClientModule } from '@angular/common/http';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { Camera } from '@ionic-native/camera';
+import { FileTransfer } from '@ionic-native/file-transfer';
+import { File } from '@ionic-native/file';
 import { Network } from '@ionic-native/network';
 import { ImagePicker } from '@ionic-native/image-picker';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -63,6 +65,8 @@ const firebaseConfig = {
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     Camera,
+    File,
+    FileTransfer,
     Network,
     GooglePlus,
     ImagePicker,

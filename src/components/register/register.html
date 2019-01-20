@@ -49,7 +49,7 @@
         <ion-input type="tel" [(ngModel)]="signUpForm.dealer.contact_no"></ion-input>
       </ion-item>
       <ion-item *ngIf="isDealerInputVisible">
-        <ion-img *ngIf="signUpForm.dealer.profile_image!=''" [alt]="'DealerImage'" [height]="100" [width]="100" [src]="signUpForm.dealer.profile_image"></ion-img>
+        <ion-img *ngIf="selectedDealerImageURI!=''" [alt]="'DealerImage'" [height]="100" [width]="100" [src]="selectedDealerImageURI"></ion-img>
         <button ion-button large clear (click)="uploadDealerProfileImage()" item-end>
           <ion-icon name="cloud-upload"></ion-icon>
         </button>
@@ -59,7 +59,7 @@
     </div>
     <ion-item>
       <!-- <ion-input [disabled]="true" type="text" placeholder="Profile photo" [(ngModel)]="signUpForm.photoURL"></ion-input> -->
-      <ion-img *ngIf="selectedImageURI!=''" [alt]="'ProfileImage'" [height]="200" [width]="200" [src]="selectedImageURI"></ion-img>
+      <ion-img *ngIf="selectedProfileImageURI!=''" [alt]="'ProfileImage'" [height]="200" [width]="200" [src]="selectedProfileImageURI"></ion-img>
       <button ion-button large clear (click)="uploadPhoto()" item-end>
         <ion-icon name="cloud-upload"></ion-icon>
       </button>

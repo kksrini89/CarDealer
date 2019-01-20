@@ -1,15 +1,9 @@
 <ion-header>
-
-  <ion-navbar color="primary">
-    <ion-title text-center>LOGIN</ion-title>
-  </ion-navbar>
-
+  <ion-navbar color="primary"> <ion-title text-center>LOGIN</ion-title> </ion-navbar>
 </ion-header>
-
 
 <ion-content padding>
   <ion-list>
-
     <ion-item>
       <ion-label floating>Email</ion-label>
       <ion-input type="email" [(ngModel)]="loginform.email"></ion-input>
@@ -19,14 +13,12 @@
       <ion-label floating>Password</ion-label>
       <ion-input type="password" [(ngModel)]="loginform.password"></ion-input>
     </ion-item>
-
   </ion-list>
   <div padding>
     <button block ion-button (click)="login()">Login</button>
     <button block ion-button (click)="signUp()">Register</button>
     <div padding text-center>
-      <a href="#" padding (click)="resetPassword()">Reset Password</a>
+      <a href="#" padding (click)="forgotPassword()">Forgot Password</a>
     </div>
   </div>
-
 </ion-content>

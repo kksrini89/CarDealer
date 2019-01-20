@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Platform } from 'ionic-angular';
 import { GooglePlus } from '@ionic-native/google-plus';
@@ -8,8 +8,11 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 
 import { User } from '../models/user.model';
+import { settings } from '../config/config';
 import { Observable, of } from 'rxjs';
 import { switchMap, first } from 'rxjs/operators';
+import { NativeStorage } from '@ionic-native/native-storage';
+import { Storage } from '@ionic/storage';
 // import { map } from 'rxjs-compat/operator/map';
 
 @Injectable()
@@ -18,12 +21,15 @@ export class AuthProvider {
   userProfile: any = null;
   dealers: any[] = [];
   selectedDealer: any;
+  private API_URL: string = 'http://192.168.0.102:7777/api/auth';
   constructor(
     private platform: Platform,
-    // private http: HttpClient,
+    private http: HttpClient,
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private gplus: GooglePlus
+    private gplus: GooglePlus,
+    private storage: NativeStorage,
+    private store: Storage
   ) {
     // this.afAuth.auth.onAuthStateChanged(user => {
     //   if (user) {
@@ -141,17 +147,26 @@ export class AuthProvider {
     }
   }
 
-  async signOut() {
-    await this.afAuth.auth.signOut();
-    if (this.platform.is('cordova')) {
-      this.gplus.logout().then(res => console.log(' logged out!'));
-    }
+  signOut() {
+    this.storage.getItem('token').then(res => {
+      if (res) {
+        this.storage.remove('token').then(removed => {
+          console.log('logged out!');
+        });
+      }
+    });
+    // await this.afAuth.auth.signOut();
+    // if (this.platform.is('cordova')) {
+    //   this.gplus.logout().then(res => console.log(' logged out!'));
+    // }
   }
 
   // Current user as a Promise. Useful for one-off operations.
-  getCurrentUser() {
+  async getCurrentUser() {
     try {
-      return this.user$.pipe(first()).toPromise();
+      // return this.user$.pipe(first()).toPromise();
+      const token = await this.store.get('token');
+      return token['user'];
     } catch (error) {
       throw error;
     }
@@ -163,17 +178,18 @@ export class AuthProvider {
   async isLoggedIn(): Promise<boolean> {
     // return await this.getCurrentUser();
     // return this.getCurrentUser().subscribe(res => !!res);
-    const user = await this.getCurrentUser();
-    return !!user;
+    const token = await this.store.get('token');
+    // const user = await this.getCurrentUser();
+    return !!token;
   }
 
   getUserProfile(user: User) {
     try {
-      return this.afs
-        .doc(`users/${user.uid}`)
-        .valueChanges()
-        .pipe(first())
-        .toPromise();
+      // return this.afs
+      //   .doc(`users/${user.uid}`)
+      //   .valueChanges()
+      //   .pipe(first())
+      //   .toPromise();
     } catch (error) {
       throw error;
     }
@@ -283,12 +299,28 @@ export class AuthProvider {
   // Login
   signInWithEmail(credentials) {
     console.log('Sign in with email');
-    return this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
+    // return this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post(`${this.API_URL}/login`, credentials, { headers }).toPromise();
   }
 
   // Register
-  signUp(credentials) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+  signUp(input: FormData) {
+    // return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+    // const inputHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+    // http://192.168.0.102:7777/api/auth/register
+    return this.http.post(`${this.API_URL}/register`, input).toPromise();
+    // .then(async data => {
+    //   await this.storage.setItem('token', data['token']);
+    //   await this.storage.setItem('user_id', data['_id']);
+    // }).catch(err=> err);
+  }
+
+  forgotPassword(email: String) {
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http
+      .post(`${settings.api_root}/auth/forgot_password`, { email }, { headers })
+      .toPromise();
   }
 
   resetPassword(email: string) {

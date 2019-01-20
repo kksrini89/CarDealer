@@ -9,7 +9,8 @@
 <ion-content fullscreen>
   <div class="header-parent">
     <div class="profile">
-      <img src="{{loggedInUser.photoURL}}">
+      <img *ngIf="loggedInUser && loggedInUser.photo" src="{{apiUrl + '/images/'+ loggedInUser.photo +'/profile_image'}}">
+      <!-- src="{{apiUrl}}/auth/images/${loggedInUser.photo}/profile_image"> -->
     </div>
   </div>
   <div text-center padding>

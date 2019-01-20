@@ -25,10 +25,11 @@ export class DisplayPage {
   tabsCtrl: Tabs;
   searchInput: string = '';
 
-  user: User;
+  user: any;
   carDealsList$: Observable<any[]>;
   carList: any[];
   isEditModeEnabled: boolean = false;
+  public API_URL: string = 'http://192.168.0.102:7777/api/car';
 
   constructor(
     public navCtrl: NavController,
@@ -43,9 +44,15 @@ export class DisplayPage {
 
   ionViewWillEnter() {
     console.log(this.isEditModeEnabled);
-    this.carDealsList$ = this.carProvider.getCars();
-    this.authService.getCurrentUser().then(res => (this.user = res));
-    this.carDealsList$.subscribe(items => (this.carList = items));
+    this.carProvider.getCars().then(items => {
+      console.log(items);
+      this.carList = items;
+    });
+    this.authService.getCurrentUser().then(res => {
+      this.user = res;
+      console.log(this.user);
+    });
+    // this.carDealsList$.subscribe(items => (this.carList = items));
   }
 
   ionViewDidLoad() {
@@ -54,7 +61,7 @@ export class DisplayPage {
 
   OnInput(event: any) {
     let tempSpace = [];
-    this.carProvider.getCars().subscribe(items => {
+    this.carProvider.getCars().then(items => {
       tempSpace = items;
       let inputValue = event.target.value;
       if (inputValue && inputValue.trim() !== '') {
@@ -74,10 +81,11 @@ export class DisplayPage {
   }
 
   OnCancel(event: any) {
-    this.carProvider.getCars().subscribe(items => (this.carList = items));
+    this.carProvider.getCars().then(items => (this.carList = items));
   }
 
   getDetail(car: Car) {
+    console.log(car);
     this.navCtrl.push('CarDetailPage', { 'selected-car': JSON.stringify(car) });
   }
 
@@ -122,11 +130,11 @@ export class DisplayPage {
       console.log(car);
       // const user = await this.authService.getCurrentUser();
       // console.log(user);
-      if (car.hasOwnProperty('createdBy') && this.user.hasOwnProperty('uid')) {
+      if (car.hasOwnProperty('createdBy') && this.user.hasOwnProperty('_id')) {
         if (
-          this.user.roles.admin ||
-          this.user.roles.editor ||
-          car.createdBy.uid === this.user.uid
+          this.user.roles == 'admin' ||
+          this.user.roles == 'editor' ||
+          car.createdBy._id.toString() === this.user._id.toString()
         ) {
           // const alert = this.alertCtrl.create({
           //   title: 'Unauthorized!',

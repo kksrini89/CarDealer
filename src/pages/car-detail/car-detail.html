@@ -1,32 +1,43 @@
 <ion-header>
-  <ion-navbar color="secondary">
-    <ion-title>DETAIL</ion-title>
-  </ion-navbar>
+  <ion-navbar color="secondary"> <ion-title>DETAIL</ion-title> </ion-navbar>
 </ion-header>
 
 <ion-content full-screen>
-
   <div *ngIf="selectedCar">
     <div class="car-image">
-      <div *ngIf="selectedCar.photo;else noImage">
-        <ion-slides autoplay="2500" loop="true" pager="true" paginationType="bullets" *ngIf="selectedCar.photo && selectedCar.photo.length >1">
+      <div *ngIf="selectedCar.photos; else noImage">
+        <ion-slides
+          autoplay="2500"
+          loop="true"
+          pager="true"
+          paginationType="bullets"
+          *ngIf="selectedCar.photos && selectedCar.photos.length > 1"
+        >
           <!-- <ion-slide *ngFor="let img of selectedCar.photo">
             <img src="{{img}}" alt="car image">
           </ion-slide> -->
-          <ion-slide *ngFor="let item of selectedCar.photo">
-            <img src="{{item}}" />
+          <ion-slide *ngFor="let item of selectedCar.photos">
+            <img src="{{ API_URL + '/car/images/' + item }}" />
           </ion-slide>
         </ion-slides>
-        <img src="{{selectedCar.photo[0]}}" alt="car image" *ngIf="selectedCar.photo && selectedCar.photo.length ==1">
-        <img src="assets/imgs/no-img.png" alt="car image" *ngIf="selectedCar.photo && selectedCar.photo.length ==0">
+        <img
+          src="{{ API_URL + '/car/images/' + selectedCar.photos[0] }}"
+          alt="car image"
+          *ngIf="selectedCar.photos && selectedCar.photos.length == 1"
+        />
+        <img
+          src="assets/imgs/no-img.png"
+          alt="car image"
+          *ngIf="selectedCar.photos && selectedCar.photos.length == 0"
+        />
       </div>
       <template #noImage>
-        <img [src]="'assets/imgs/no-img.png'" alt="No Image available">
+        <img [src]="'assets/imgs/no-img.png'" alt="No Image available" />
       </template>
     </div>
     <ion-item>
       <h2>Description:</h2>
-      <p>{{selectedCar.description}}</p>
+      <p>{{ selectedCar.description }}</p>
     </ion-item>
 
     <ion-grid>
@@ -37,50 +48,54 @@
       <ion-row padding>
         <!-- <ion-col>Showroom Name: </ion-col> -->
         <ion-col>
-          <ion-img *ngIf="selectedCar.profile_image!=''" [alt]="'DealerImage'" [height]="100" [width]="100" [src]="selectedCar.profile_image"></ion-img>
+          <ion-img
+            *ngIf="selectedCar.profile_image != '' && selectedCar.profile_image != null"
+            [alt]="'DealerImage'"
+            src="{{API_URL + '/auth/images/' + selectedCar.profile_image }}"
+          ></ion-img>
         </ion-col>
-        <ion-col>{{selectedCar.showroomName}}</ion-col>
+        <ion-col>{{ selectedCar.showroomName }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Address: </ion-col>
-        <ion-col>{{selectedCar.address}}</ion-col>
+        <ion-col>{{ selectedCar.address }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>City: </ion-col>
-        <ion-col>{{selectedCar.city}}</ion-col>
+        <ion-col>{{ selectedCar.city }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>State: </ion-col>
-        <ion-col>{{selectedCar.state}}</ion-col>
+        <ion-col>{{ selectedCar.state }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Mobile Number: </ion-col>
-        <ion-col>{{selectedCar.contact_no}}</ion-col>
+        <ion-col>{{ selectedCar.contact_no }}</ion-col>
       </ion-row>
 
       <ion-row padding>
         <ion-col>Make: </ion-col>
-        <ion-col>{{selectedCar.make}}</ion-col>
+        <ion-col>{{ selectedCar.make }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Model: </ion-col>
-        <ion-col>{{selectedCar.model}}</ion-col>
+        <ion-col>{{ selectedCar.model }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Make Year: </ion-col>
-        <ion-col>{{selectedCar.make_year | date}}</ion-col>
+        <ion-col>{{ selectedCar.make_year | date }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Price: </ion-col>
-        <ion-col>{{selectedCar.amount}}</ion-col>
+        <ion-col>{{ selectedCar.amount }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Fuel Type: </ion-col>
-        <ion-col>{{selectedCar.fuel_type}}</ion-col>
+        <ion-col>{{ selectedCar.fuel_type }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Transmission Type: </ion-col>
-        <ion-col>{{selectedCar.transmission_type}}</ion-col>
+        <ion-col>{{ selectedCar.transmission_type }}</ion-col>
       </ion-row>
       <!-- <ion-row padding>
         <ion-col>Model: </ion-col>
@@ -88,11 +103,11 @@
       </ion-row> -->
       <ion-row padding>
         <ion-col>No. Of Owners: </ion-col>
-        <ion-col>{{selectedCar.number_of_owners}}</ion-col>
+        <ion-col>{{ selectedCar.number_of_owners }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Kms Driven: </ion-col>
-        <ion-col>{{selectedCar.kms_driven}}</ion-col>
+        <ion-col>{{ selectedCar.kms_driven }}</ion-col>
       </ion-row>
       <!-- <ion-row padding>
         <ion-col>Model</ion-col>
@@ -100,31 +115,31 @@
       </ion-row> -->
       <ion-row padding>
         <ion-col>Mileage: </ion-col>
-        <ion-col>{{selectedCar.mileage}}</ion-col>
+        <ion-col>{{ selectedCar.mileage }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Warranty: </ion-col>
-        <ion-col>{{selectedCar.warranty}}</ion-col>
+        <ion-col>{{ selectedCar.warranty }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Car Accidental: </ion-col>
-        <ion-col>{{selectedCar.isCarAccidental? 'yes':'no'}}</ion-col>
+        <ion-col>{{ selectedCar.isCarAccidental ? 'yes' : 'no' }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Car Certified: </ion-col>
-        <ion-col>{{selectedCar.isCarCertified ? 'yes':'no'}}</ion-col>
+        <ion-col>{{ selectedCar.isCarCertified ? 'yes' : 'no' }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Car Flood Affected: </ion-col>
-        <ion-col>{{selectedCar.isCarFloodAffected ? 'yes': 'no'}}</ion-col>
+        <ion-col>{{ selectedCar.isCarFloodAffected ? 'yes' : 'no' }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Fixed: </ion-col>
-        <ion-col>{{selectedCar.isFixed ? 'yes':'no'}}</ion-col>
+        <ion-col>{{ selectedCar.isFixed ? 'yes' : 'no' }}</ion-col>
       </ion-row>
       <ion-row padding>
         <ion-col>Exchange Accepted: </ion-col>
-        <ion-col>{{selectedCar.isExchangeAccepted ? 'yes': 'no'}}</ion-col>
+        <ion-col>{{ selectedCar.isExchangeAccepted ? 'yes' : 'no' }}</ion-col>
       </ion-row>
     </ion-grid>
 
@@ -153,27 +168,6 @@
     </ion-card> -->
   </div>
 </ion-content>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- <ion-header>
 

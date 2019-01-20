@@ -18,13 +18,13 @@
   <!-- <div *ngIf="(carDealsList$ | async) as list"> -->
   <div *ngIf="carList">
     <ion-card *ngFor="let item of carList">
-      <ion-slides autoplay="2500" loop="true" pager="true" paginationType="bullets" *ngIf="item.photo && item.photo.length >1">
-        <ion-slide *ngFor="let item of item.photo">
-          <img src="{{item}}" alt="car image" />
+      <ion-slides autoplay="2500" loop="true" pager="true" paginationType="bullets" *ngIf="item.photos && item.photos.length > 1">
+        <ion-slide *ngFor="let item of item.photos">
+          <img src="{{API_URL+'/images/'+ item}}" alt="car image" />
         </ion-slide>
       </ion-slides>
-      <img *ngIf="item.photo && item.photo.length ==0" style="height: 200px" src="assets/imgs/no-img.png" />
-      <img *ngIf="item.photo && item.photo.length ==1" style="height: 200px" src="{{item.photo[0]}}" />
+      <img *ngIf="item.photos && item.photos.length == 0" src="assets/imgs/no-img.png" />
+      <img *ngIf="item.photos && item.photos.length == 1" src="{{API_URL + '/images/'+ item.photos[0]}}" />
       <ion-card-content>
         <ion-card-title>
           {{item.make}}
@@ -35,11 +35,11 @@
         </p>
       </ion-card-content>
       <ion-item>
-        <button ion-button icon-start clear item-start (click)="deleteItem(item)" *ngIf="(user?.roles.admin) || (user?.uid === item?.createdBy?.uid)">
+        <button ion-button icon-start clear item-start (click)="deleteItem(item)" *ngIf="(user?.roles == 'admin') || (user?._id === item?.createdBy?._id)">
           <ion-icon name="trash"></ion-icon>
           Delete
         </button>
-        <button ion-button clear icon-start item-center (click)="editItem(item)" *ngIf="(user?.roles.admin) || (user?.uid === item?.createdBy?.uid)">
+        <button ion-button clear icon-start item-center (click)="editItem(item)" *ngIf="(user?.roles== 'admin') || (user?._id === item?.createdBy?._id)">
           <ion-icon name="open"></ion-icon>
           Edit
         </button>
